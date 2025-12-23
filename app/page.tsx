@@ -66,11 +66,16 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans pb-20">
       
-      {/* ヘッダー */}
+      {/* ヘッダー (ロゴ画像対応版) */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+          <div className="flex items-center gap-3">
+            {/* 👇 ここで public/logo.png を読み込んでいます */}
+            <img 
+              src="/logo.jpg" 
+              alt="ロゴ" 
+              className="w-8 h-8 rounded-lg object-cover shadow-sm border border-gray-100"
+            />
             <h1 className="text-lg font-bold tracking-tight text-gray-900 sm:text-xl">
               レポート文字数カウンター
             </h1>
@@ -234,7 +239,6 @@ export default function Home() {
                   Amazon
                 </a>
                 <a 
-                  // 🟢 修正箇所: いただいたURLを適用済み！
                   href="https://a.r10.to/h5fKiw" 
                   target="_blank" rel="noopener noreferrer"
                   className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors"
@@ -252,7 +256,7 @@ export default function Home() {
       </main>
       
       <footer className="max-w-4xl mx-auto px-4 mt-12 text-center text-gray-400 text-sm">
-        <p>&copy; 2025 Acky</p>
+        <p>&copy; 2024 Report Word Counter. Built for Students.</p>
       </footer>
     </div>
   );
