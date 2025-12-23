@@ -174,7 +174,7 @@ export default function Home() {
           )}
         </section>
 
-        {/* 👇 Amazon商品紹介 (2冊とも指定リンク・ID対応済み) 👇 */}
+        {/* 👇 Amazon商品紹介 (画像URLをHTTPSに変更) 👇 */}
         <section className="mt-8">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             📖 レポート作成に役立つ神アイテム
@@ -190,7 +190,8 @@ export default function Home() {
             >
               <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
                 <img 
-                  src="http://images-jp.amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg" 
+                  // 修正: HTTPSのURLに変更 (images-na.ssl-images-amazon.comを使用)
+                  src="https://images-na.ssl-images-amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg" 
                   alt="最新版 論文の教室" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
@@ -204,7 +205,7 @@ export default function Home() {
               </div>
             </a>
 
-            {/* 商品2: コピペと言われないレポートの書き方教室 (新URL対応) */}
+            {/* 商品2: コピペと言われないレポートの書き方教室 */}
             <a 
               href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" 
               target="_blank" 
@@ -213,8 +214,8 @@ export default function Home() {
             >
               <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
                  <img 
-                  // いただいたURLのASIN(B077RWQNKN)に合わせて画像を取得します
-                  src="http://images-jp.amazon.com/images/P/B077RWQNKN.09.LZZZZZZZ.jpg" 
+                  // 修正: HTTPSのURLに変更 (images-na.ssl-images-amazon.comを使用)
+                  src="https://images-na.ssl-images-amazon.com/images/P/B077RWQNKN.09.LZZZZZZZ.jpg" 
                   alt="コピペと言われないレポートの書き方教室" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
