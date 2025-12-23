@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-// さっき作った記事コンポーネントを読み込み
+// SEO記事コンポーネントの読み込み
 import { SeoContent } from './components/SeoContent'; 
 
 export default function Home() {
@@ -13,7 +13,6 @@ export default function Home() {
   const [isSaved, setIsSaved] = useState(false); // 保存状態のインジケーター
 
   // --- 機能: 自動保存 (LocalStorage) ---
-  // 1. 初回ロード時: 保存されたデータがあれば復元
   useEffect(() => {
     const savedText = localStorage.getItem('report-text');
     if (savedText) {
@@ -21,12 +20,11 @@ export default function Home() {
     }
   }, []);
 
-  // 2. テキスト変更時: LocalStorageに保存
   useEffect(() => {
     if (text) {
       localStorage.setItem('report-text', text);
       setIsSaved(true);
-      const timer = setTimeout(() => setIsSaved(false), 2000); // 2秒後に表示を消す
+      const timer = setTimeout(() => setIsSaved(false), 2000);
       return () => clearTimeout(timer);
     }
   }, [text]);
@@ -56,16 +54,12 @@ export default function Home() {
       if (parts.length > 1) {
         processedText = parts[0]; 
       }
-
-      // 2. 文中の引用番号 [1], [12] などを削除
+      // 2. 文中の引用番号 [1] などを削除
       processedText = processedText.replace(/\[\d+\]/g, '');
     }
 
-    // 文字数計算
     const countWithSpaces = processedText.length;
-    // 空白（全角・半角・改行）を除去してカウント
     const countWithoutSpaces = processedText.replace(/\s/g, '').length;
-    // 行数
     const lines = processedText ? processedText.split(/\r\n|\r|\n/).length : 0;
 
     return { countWithSpaces, countWithoutSpaces, lines };
@@ -75,7 +69,6 @@ export default function Home() {
   const handleGenerateRef = () => {
     const date = new Date();
     const today = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
-    // 一般的なWeb引用フォーマット: 著者名. 『タイトル』. Webサイト名. 入手日付, URL.
     const result = `${refData.author ? refData.author + '. ' : ''}『${refData.title}』. (参照 ${today}), ${refData.url}`;
     setGeneratedRef(result);
   };
@@ -92,7 +85,6 @@ export default function Home() {
               レポート文字数カウンター
             </h1>
           </div>
-          {/* 保存ステータス表示 */}
           <div className={`text-xs font-medium transition-opacity duration-500 ${isSaved ? 'text-green-600 opacity-100' : 'opacity-0'}`}>
             ✓ 自動保存しました
           </div>
@@ -103,8 +95,6 @@ export default function Home() {
         
         {/* メイン機能エリア */}
         <section className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
-          
-          {/* コントロールバー */}
           <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex flex-wrap items-center justify-between gap-3">
             <div className="flex gap-2">
                 <button onClick={handleCopyText} className="text-xs bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 px-3 py-1.5 rounded transition-colors shadow-sm font-medium">
@@ -114,7 +104,6 @@ export default function Home() {
                     🗑️ クリア
                 </button>
             </div>
-            
             <label className="flex items-center cursor-pointer select-none">
               <span className="mr-2 text-xs font-bold text-gray-600">参考文献を除外</span>
               <div className="relative">
@@ -137,7 +126,6 @@ export default function Home() {
             onChange={(e) => setText(e.target.value)}
           ></textarea>
 
-          {/* カウント結果バー (sticky bottom) */}
           <div className="bg-blue-50/90 backdrop-blur px-4 py-3 border-t border-blue-100 grid grid-cols-3 gap-2 text-center sticky bottom-0">
             <div>
               <p className="text-[10px] text-blue-600 font-bold uppercase">文字数 (すべて)</p>
@@ -153,12 +141,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* 広告エリア */}
-        <div className="w-full py-8 bg-gray-100 rounded-lg border border-gray-200 border-dashed flex flex-col items-center justify-center text-gray-400 gap-2">
-            <span className="text-xs font-medium">スポンサーリンク</span>
-            <div className="w-64 h-12 bg-gray-200 rounded animate-pulse"></div>
-        </div>
 
         {/* 参考文献ジェネレーター */}
         <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
@@ -202,14 +184,70 @@ export default function Home() {
           )}
         </section>
 
-        {/* 👇 追加されたSEO記事コンテンツ */}
+        {/* 👇 Amazonアフィリエイト商品紹介エリア (修正済み) 👇 */}
+        <section className="mt-8">
+          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            📖 レポート作成に役立つ神アイテム
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            {/* 商品1: 論文の教室 */}
+            <a 
+              href="https://www.amazon.co.jp/gp/product/414091194X/ref=as_li_tl?ie=UTF8&tag=acky0113-22" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-start bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all group"
+            >
+              <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
+                <img 
+                  src="https://m.media-amazon.com/images/I/51+6J7J-CLL._SL500_.jpg" 
+                  alt="論文の教室" 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600">論文の教室 レポートから卒論まで</h4>
+                <p className="text-xs text-gray-500 mb-2">「そもそも何を書けばいいかわからない」という人のためのバイブル。伝説のベストセラー。</p>
+                <span className="inline-block bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded">
+                  Amazonで見る ↗
+                </span>
+              </div>
+            </a>
+
+            {/* 商品2: コピペと言われないレポートの書き方 */}
+            <a 
+              href="https://www.amazon.co.jp/gp/product/4140884276/ref=as_li_tl?ie=UTF8&tag=acky0113-22" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-start bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all group"
+            >
+              <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
+                 <img 
+                  src="https://m.media-amazon.com/images/I/51Z2b+3gQjL._SL500_.jpg" 
+                  alt="コピペと言われないレポートの書き方" 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                />
+              </div>
+              <div className="flex-1">
+                <h4 className="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600">コピペと言われないレポートの書き方</h4>
+                <p className="text-xs text-gray-500 mb-2">コピペ判定が怖いならこれを読むべき。引用のルールが完璧にわかります。</p>
+                <span className="inline-block bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded">
+                  Amazonで見る ↗
+                </span>
+              </div>
+            </a>
+
+          </div>
+        </section>
+
+        {/* SEO記事コンテンツ */}
         <SeoContent />
 
       </main>
       
       {/* フッター */}
       <footer className="max-w-4xl mx-auto px-4 mt-12 text-center text-gray-400 text-sm">
-        <p>&copy; 2025 Acky</p>
+        <p>&copy; 2024 Report Word Counter. Built for Students.</p>
       </footer>
     </div>
   );
