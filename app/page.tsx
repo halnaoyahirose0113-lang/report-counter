@@ -199,19 +199,3 @@ export default function Home() {
     </div>
   );
 }
-
-
-
-# まだコミットしていない変更（自動保存機能など）をステージング
-git add .
-
-# コミットメッセージを作成
-git commit -m "Add auto-save and copy feature"
-
-# リポジトリのブランチ名を main に変更（念のため）
-git branch -M main
-
-# リモートリポジトリを登録（GitHubの画面に表示されているURLをコピペ）
-git remote add origin https://github.com/halnaoyahirose0113-lang/report-counter.git
-# GitHubにプッシュ
-git push -u origin main
