@@ -174,7 +174,7 @@ export default function Home() {
           )}
         </section>
 
-        {/* 👇 Amazon商品紹介 (画像URLをHTTPSに変更) 👇 */}
+        {/* 👇 Amazon & 楽天 ダブルアフィリエイトエリア (完全版) 👇 */}
         <section className="mt-8">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             📖 レポート作成に役立つ神アイテム
@@ -182,52 +182,67 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             
             {/* 商品1: 最新版 論文の教室 */}
-            <a 
-              href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-start bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all group"
-            >
-              <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
-                <img 
-                  // 修正: HTTPSのURLに変更 (images-na.ssl-images-amazon.comを使用)
-                  src="https://images-na.ssl-images-amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg" 
-                  alt="最新版 論文の教室" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                />
+            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
+              <div className="flex items-start mb-3">
+                <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
+                    <img src="https://images-na.ssl-images-amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg" alt="最新版 論文の教室" className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1">
+                    <h4 className="font-bold text-gray-800 text-sm mb-1">最新版 論文の教室 レポートから卒論まで</h4>
+                    <p className="text-xs text-gray-500">「そもそも何を書けばいいかわからない」ならこれ。伝説のベストセラー最新版。</p>
+                </div>
               </div>
-              <div className="flex-1">
-                <h4 className="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600">最新版 論文の教室 レポートから卒論まで</h4>
-                <p className="text-xs text-gray-500 mb-2">「そもそも何を書けばいいかわからない」ならこれ。伝説のベストセラーの最新版！</p>
-                <span className="inline-block bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded">
-                  Amazonで見る ↗
-                </span>
+              
+              {/* ボタンエリア */}
+              <div className="flex gap-2">
+                <a 
+                  href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" 
+                  target="_blank" rel="noopener noreferrer"
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors"
+                >
+                  Amazon
+                </a>
+                <a 
+                  href="https://a.r10.to/hkR3I2" 
+                  target="_blank" rel="noopener noreferrer"
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors"
+                >
+                  楽天
+                </a>
               </div>
-            </a>
+            </div>
 
-            {/* 商品2: コピペと言われないレポートの書き方教室 */}
-            <a 
-              href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-start bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all group"
-            >
-              <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
-                 <img 
-                  // 修正: HTTPSのURLに変更 (images-na.ssl-images-amazon.comを使用)
-                  src="https://images-na.ssl-images-amazon.com/images/P/B077RWQNKN.09.LZZZZZZZ.jpg" 
-                  alt="コピペと言われないレポートの書き方教室" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                />
+            {/* 商品2: コピペと言われないレポートの書き方 */}
+            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
+              <div className="flex items-start mb-3">
+                <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
+                    <img src="https://images-na.ssl-images-amazon.com/images/P/B077RWQNKN.09.LZZZZZZZ.jpg" alt="コピペと言われないレポートの書き方" className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1">
+                    <h4 className="font-bold text-gray-800 text-sm mb-1">コピペと言われないレポートの書き方教室</h4>
+                    <p className="text-xs text-gray-500">コピペ判定が怖いならこれを読むべき。引用のルールが完璧にわかります。</p>
+                </div>
               </div>
-              <div className="flex-1">
-                <h4 className="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600">コピペと言われないレポートの書き方教室</h4>
-                <p className="text-xs text-gray-500 mb-2">コピペ判定が怖いならこれを読むべき。引用のルールが完璧にわかります。</p>
-                <span className="inline-block bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded">
-                  Amazonで見る ↗
-                </span>
+
+              {/* ボタンエリア */}
+              <div className="flex gap-2">
+                <a 
+                  href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" 
+                  target="_blank" rel="noopener noreferrer"
+                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors"
+                >
+                  Amazon
+                </a>
+                <a 
+                  // 🟢 修正箇所: いただいたURLを適用済み！
+                  href="https://a.r10.to/h5fKiw" 
+                  target="_blank" rel="noopener noreferrer"
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors"
+                >
+                  楽天
+                </a>
               </div>
-            </a>
+            </div>
 
           </div>
         </section>
