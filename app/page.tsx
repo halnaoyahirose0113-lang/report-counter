@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+// さっき作った記事コンポーネントを読み込み
+import { SeoContent } from './components/SeoContent'; 
 
 export default function Home() {
   // --- 状態管理 (State) ---
@@ -21,8 +23,6 @@ export default function Home() {
 
   // 2. テキスト変更時: LocalStorageに保存
   useEffect(() => {
-    // タイマーを使って保存頻度を調整（デバウンス的な役割）も可能ですが、
-    // 今回はリアルタイム性を重視して即時保存します
     if (text) {
       localStorage.setItem('report-text', text);
       setIsSaved(true);
@@ -50,16 +50,22 @@ export default function Home() {
     let processedText = text;
 
     if (excludeReferences) {
+      // 1. 「参考文献」または「References」という見出し以降をカット
       const splitRegex = /\n(参考文献|References|引用文献)/i;
       const parts = processedText.split(splitRegex);
       if (parts.length > 1) {
         processedText = parts[0]; 
       }
+
+      // 2. 文中の引用番号 [1], [12] などを削除
       processedText = processedText.replace(/\[\d+\]/g, '');
     }
 
+    // 文字数計算
     const countWithSpaces = processedText.length;
+    // 空白（全角・半角・改行）を除去してカウント
     const countWithoutSpaces = processedText.replace(/\s/g, '').length;
+    // 行数
     const lines = processedText ? processedText.split(/\r\n|\r|\n/).length : 0;
 
     return { countWithSpaces, countWithoutSpaces, lines };
@@ -69,6 +75,7 @@ export default function Home() {
   const handleGenerateRef = () => {
     const date = new Date();
     const today = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+    // 一般的なWeb引用フォーマット: 著者名. 『タイトル』. Webサイト名. 入手日付, URL.
     const result = `${refData.author ? refData.author + '. ' : ''}『${refData.title}』. (参照 ${today}), ${refData.url}`;
     setGeneratedRef(result);
   };
@@ -130,7 +137,7 @@ export default function Home() {
             onChange={(e) => setText(e.target.value)}
           ></textarea>
 
-          {/* カウント結果バー (Fixed Bottom on Mobile usually, but here sticky inside component) */}
+          {/* カウント結果バー (sticky bottom) */}
           <div className="bg-blue-50/90 backdrop-blur px-4 py-3 border-t border-blue-100 grid grid-cols-3 gap-2 text-center sticky bottom-0">
             <div>
               <p className="text-[10px] text-blue-600 font-bold uppercase">文字数 (すべて)</p>
@@ -195,7 +202,15 @@ export default function Home() {
           )}
         </section>
 
+        {/* 👇 追加されたSEO記事コンテンツ */}
+        <SeoContent />
+
       </main>
+      
+      {/* フッター */}
+      <footer className="max-w-4xl mx-auto px-4 mt-12 text-center text-gray-400 text-sm">
+        <p>&copy; 2025 Acky</p>
+      </footer>
     </div>
   );
 }
