@@ -66,13 +66,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans pb-20">
       
-      {/* ヘッダー (ロゴ画像対応版) */}
+      {/* ヘッダー */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* 👇 ここで public/logo.png を読み込んでいます */}
             <img 
-              src="/logo.jpg" 
+              src="/logo.png" 
               alt="ロゴ" 
               className="w-8 h-8 rounded-lg object-cover shadow-sm border border-gray-100"
             />
@@ -179,14 +178,14 @@ export default function Home() {
           )}
         </section>
 
-        {/* 👇 Amazon & 楽天 ダブルアフィリエイトエリア (完全版) 👇 */}
+        {/* 👇 書籍コーナー 👇 */}
         <section className="mt-8">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             📖 レポート作成に役立つ神アイテム
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             
-            {/* 商品1: 最新版 論文の教室 */}
+            {/* 書籍1 */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-start mb-3">
                 <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
@@ -197,27 +196,13 @@ export default function Home() {
                     <p className="text-xs text-gray-500">「そもそも何を書けばいいかわからない」ならこれ。伝説のベストセラー最新版。</p>
                 </div>
               </div>
-              
-              {/* ボタンエリア */}
               <div className="flex gap-2">
-                <a 
-                  href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" 
-                  target="_blank" rel="noopener noreferrer"
-                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors"
-                >
-                  Amazon
-                </a>
-                <a 
-                  href="https://a.r10.to/hkR3I2" 
-                  target="_blank" rel="noopener noreferrer"
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors"
-                >
-                  楽天
-                </a>
+                <a href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">Amazon</a>
+                <a href="https://a.r10.to/hkR3I2" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">楽天</a>
               </div>
             </div>
 
-            {/* 商品2: コピペと言われないレポートの書き方 */}
+            {/* 書籍2 */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-start mb-3">
                 <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
@@ -228,23 +213,58 @@ export default function Home() {
                     <p className="text-xs text-gray-500">コピペ判定が怖いならこれを読むべき。引用のルールが完璧にわかります。</p>
                 </div>
               </div>
-
-              {/* ボタンエリア */}
               <div className="flex gap-2">
-                <a 
-                  href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" 
-                  target="_blank" rel="noopener noreferrer"
-                  className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors"
-                >
-                  Amazon
-                </a>
-                <a 
-                  href="https://a.r10.to/h5fKiw" 
-                  target="_blank" rel="noopener noreferrer"
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors"
-                >
-                  楽天
-                </a>
+                <a href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">Amazon</a>
+                <a href="https://a.r10.to/h5fKiw" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">楽天</a>
+              </div>
+            </div>
+
+          </div>
+        </section>
+        
+        {/* 👇 ガジェットコーナー (修正: iFalaメガネに対応) 👇 */}
+        <section className="mt-12">
+          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            💻 レポート執筆が捗るデスク環境
+            <span className="text-xs bg-blue-100 text-blue-800 font-medium px-2 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">おすすめ</span>
+          </h3>
+          <p className="text-sm text-gray-500 mb-6">長時間作業の「肩こり・目の疲れ」を軽減する定番アイテム。</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            {/* ガジェット1: PCスタンド (BoYata) */}
+            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
+              <div className="flex items-start mb-3">
+                <div className="w-24 h-24 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4 flex items-center justify-center p-2">
+                    <img src="https://images-na.ssl-images-amazon.com/images/P/B07H774Q42.09.LZZZZZZZ.jpg" alt="BoYata ノートパソコンスタンド" className="w-auto h-full object-contain" />
+                </div>
+                <div className="flex-1">
+                    <h4 className="font-bold text-gray-800 text-sm mb-1">BoYata ノートパソコンスタンド (17インチ対応)</h4>
+                    <p className="text-xs text-gray-500">大学生の定番。目線が上がって猫背・肩こりが劇的に改善します。絶対に導入すべき。</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <a href="https://www.amazon.co.jp/dp/B07H774Q42?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">Amazon</a>
+                <a href="https://a.r10.to/h5n0fy" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">楽天</a>
+              </div>
+            </div>
+
+            {/* ガジェット2: ブルーライトカットメガネ (iFala B0FRZG38TW) */}
+            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
+              <div className="flex items-start mb-3">
+                <div className="w-24 h-24 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4 flex items-center justify-center p-2">
+                    {/* 👇 iFalaの画像URLに差し替え */}
+                    <img src="https://images-na.ssl-images-amazon.com/images/P/B0FRZG38TW.09.LZZZZZZZ.jpg" alt="iFala ブルーライトカットメガネ" className="w-auto h-full object-contain" />
+                </div>
+                <div className="flex-1">
+                    {/* 👇 商品名を更新 */}
+                    <h4 className="font-bold text-gray-800 text-sm mb-1">iFala ブルーライトカットメガネ (JIS規格/調光レンズ)</h4>
+                    <p className="text-xs text-gray-500">おしゃれな伊達メガネ風で普段使いもOK。UVカット機能付きでスマホ疲れも軽減。</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                {/* 👇 AmazonリンクをB0FRZG38TWに更新 */}
+                <a href="https://www.amazon.co.jp/dp/B0FRZG38TW?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">Amazon</a>
+                <a href="https://a.r10.to/hP5chl" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">楽天</a>
               </div>
             </div>
 
@@ -256,7 +276,7 @@ export default function Home() {
       </main>
       
       <footer className="max-w-4xl mx-auto px-4 mt-12 text-center text-gray-400 text-sm">
-        <p>&copy; 2024 Report Word Counter. Built for Students.</p>
+        <p>&copy; 2025 Acky</p>
       </footer>
     </div>
   );
