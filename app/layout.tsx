@@ -1,37 +1,33 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+import './globals.css'
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] })
 
-// 👇 ここを修正してください
 export const metadata: Metadata = {
-  title: "レポート文字数カウンター | 参考文献・引用を除外してカウント【学生専用】",
-  description: "大学のレポートや論文作成に特化した無料の文字数カウンター。参考文献や引用番号([1]など)を自動で除外して、本文のみの文字数を正確にカウントします。自動保存機能付き。",
-  // ▼▼▼ ここに追加！ ▼▼▼
-  verification: {
-    google: "SyqUrfgc1zTfMYdiIE8IX6T46WQ_785iDjCbPkuoIzk",
+  title: 'レポート文字数カウンター | 参考文献除外＆自動保存',
+  description: '大学生のためのレポート作成支援ツール。参考文献や引用を除外して本文のみの文字数をカウントできます。自動保存機能、参考文献リスト作成機能付き。',
+  // 👇 ここがアイコン設定の肝です！
+  icons: {
+    icon: '/logo.jpg',     // ブラウザのタブ用
+    shortcut: '/logo.jpg', // ショートカット用
+    apple: '/logo.jpg',    // iPhoneのホーム画面に追加した時のアイコン
   },
-  // ▲▲▲ ここまで ▲▲▲
-  keywords: ["文字数カウント", "レポート", "文字数", "参考文献除外", "大学", "論文", "字数制限"],
-  viewport: "width=device-width, initial-scale=1",
-  openGraph: {
-    title: "レポート文字数カウンター | 学生専用・参考文献除外機能つき",
-    description: "レポートの「本文だけ」をカウントしたい学生へ。参考文献や引用をワンクリックで除外できる神ツール。",
-    type: "website",
-    locale: "ja_JP",
-  },
-};
-// 👆 修正はここまで
+}
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="ja">
+      <head>
+        {/* iPhoneでホーム画面に追加した時のタイトル色などを調整 */}
+        <meta name="apple-mobile-web-app-title" content="レポカン" />
+        <meta name="theme-color" content="#ffffff" />
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
-  );
+  )
 }
