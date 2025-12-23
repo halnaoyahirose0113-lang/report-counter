@@ -1,23 +1,20 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-// SEO記事コンポーネントの読み込み
 import { SeoContent } from './components/SeoContent'; 
 
 export default function Home() {
-  // --- 状態管理 (State) ---
+  // --- 状態管理 ---
   const [text, setText] = useState('');
   const [excludeReferences, setExcludeReferences] = useState(false);
   const [refData, setRefData] = useState({ title: '', author: '', url: '' });
   const [generatedRef, setGeneratedRef] = useState('');
-  const [isSaved, setIsSaved] = useState(false); // 保存状態のインジケーター
+  const [isSaved, setIsSaved] = useState(false);
 
-  // --- 機能: 自動保存 (LocalStorage) ---
+  // --- 自動保存 ---
   useEffect(() => {
     const savedText = localStorage.getItem('report-text');
-    if (savedText) {
-      setText(savedText);
-    }
+    if (savedText) setText(savedText);
   }, []);
 
   useEffect(() => {
@@ -29,7 +26,7 @@ export default function Home() {
     }
   }, [text]);
 
-  // --- 機能: コピー & クリア ---
+  // --- コピー & クリア ---
   const handleCopyText = () => {
     if (!text) return;
     navigator.clipboard.writeText(text);
@@ -43,29 +40,22 @@ export default function Home() {
     }
   };
 
-  // --- ロジック: 文字数カウント ---
+  // --- 文字数カウントロジック ---
   const stats = useMemo(() => {
     let processedText = text;
-
     if (excludeReferences) {
-      // 1. 「参考文献」または「References」という見出し以降をカット
       const splitRegex = /\n(参考文献|References|引用文献)/i;
       const parts = processedText.split(splitRegex);
-      if (parts.length > 1) {
-        processedText = parts[0]; 
-      }
-      // 2. 文中の引用番号 [1] などを削除
+      if (parts.length > 1) processedText = parts[0]; 
       processedText = processedText.replace(/\[\d+\]/g, '');
     }
-
     const countWithSpaces = processedText.length;
     const countWithoutSpaces = processedText.replace(/\s/g, '').length;
     const lines = processedText ? processedText.split(/\r\n|\r|\n/).length : 0;
-
     return { countWithSpaces, countWithoutSpaces, lines };
   }, [text, excludeReferences]);
 
-  // --- ロジック: 参考文献ジェネレーター ---
+  // --- 参考文献生成 ---
   const handleGenerateRef = () => {
     const date = new Date();
     const today = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
@@ -184,52 +174,53 @@ export default function Home() {
           )}
         </section>
 
-        {/* 👇 Amazonアフィリエイト商品紹介エリア (修正済み) 👇 */}
+        {/* 👇 Amazon商品紹介 (2冊とも指定リンク・ID対応済み) 👇 */}
         <section className="mt-8">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             📖 レポート作成に役立つ神アイテム
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             
-            {/* 商品1: 論文の教室 */}
+            {/* 商品1: 最新版 論文の教室 */}
             <a 
-              href="https://www.amazon.co.jp/gp/product/414091194X/ref=as_li_tl?ie=UTF8&tag=acky0113-22" 
+              href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-start bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all group"
             >
               <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
                 <img 
-                  src="https://m.media-amazon.com/images/I/51+6J7J-CLL._SL500_.jpg" 
-                  alt="論文の教室" 
+                  src="http://images-jp.amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg" 
+                  alt="最新版 論文の教室" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
               </div>
               <div className="flex-1">
-                <h4 className="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600">論文の教室 レポートから卒論まで</h4>
-                <p className="text-xs text-gray-500 mb-2">「そもそも何を書けばいいかわからない」という人のためのバイブル。伝説のベストセラー。</p>
+                <h4 className="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600">最新版 論文の教室 レポートから卒論まで</h4>
+                <p className="text-xs text-gray-500 mb-2">「そもそも何を書けばいいかわからない」ならこれ。伝説のベストセラーの最新版！</p>
                 <span className="inline-block bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded">
                   Amazonで見る ↗
                 </span>
               </div>
             </a>
 
-            {/* 商品2: コピペと言われないレポートの書き方 */}
+            {/* 商品2: コピペと言われないレポートの書き方教室 (新URL対応) */}
             <a 
-              href="https://www.amazon.co.jp/gp/product/4140884276/ref=as_li_tl?ie=UTF8&tag=acky0113-22" 
+              href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-start bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all group"
             >
               <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
                  <img 
-                  src="https://m.media-amazon.com/images/I/51Z2b+3gQjL._SL500_.jpg" 
-                  alt="コピペと言われないレポートの書き方" 
+                  // いただいたURLのASIN(B077RWQNKN)に合わせて画像を取得します
+                  src="http://images-jp.amazon.com/images/P/B077RWQNKN.09.LZZZZZZZ.jpg" 
+                  alt="コピペと言われないレポートの書き方教室" 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
               </div>
               <div className="flex-1">
-                <h4 className="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600">コピペと言われないレポートの書き方</h4>
+                <h4 className="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600">コピペと言われないレポートの書き方教室</h4>
                 <p className="text-xs text-gray-500 mb-2">コピペ判定が怖いならこれを読むべき。引用のルールが完璧にわかります。</p>
                 <span className="inline-block bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded">
                   Amazonで見る ↗
@@ -240,14 +231,12 @@ export default function Home() {
           </div>
         </section>
 
-        {/* SEO記事コンテンツ */}
         <SeoContent />
 
       </main>
       
-      {/* フッター */}
       <footer className="max-w-4xl mx-auto px-4 mt-12 text-center text-gray-400 text-sm">
-        <p>&copy; 2024 Report Word Counter. Built for Students.</p>
+        <p>&copy; 2025 Acky</p>
       </footer>
     </div>
   );
