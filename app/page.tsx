@@ -11,6 +11,7 @@ export default function Home() {
   const [refData, setRefData] = useState({ title: '', author: '', url: '' });
   const [generatedRef, setGeneratedRef] = useState('');
   const [isSaved, setIsSaved] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false); // 解析中フラグ
 
   // --- 自動保存 ---
   useEffect(() => {
@@ -56,6 +57,41 @@ export default function Home() {
     return { countWithSpaces, countWithoutSpaces, lines };
   }, [text, excludeReferences]);
 
+  // --- ★ 進化機能：URLから情報を自動抽出（擬似解析） ---
+  const handleAutoFill = async () => {
+    if (!refData.url) {
+      alert("URLを入力してから「⚡自動入力」を押してください");
+      return;
+    }
+
+    setIsAnalyzing(true);
+    
+    // URLからドメイン名を抽出してサイト名を推測するロジック
+    setTimeout(() => {
+      try {
+        const urlObj = new URL(refData.url);
+        let siteName = urlObj.hostname.replace('www.', '').split('.')[0];
+        
+        // 有名ドメインの日本語変換
+        if (refData.url.includes('wikipedia.org')) siteName = "Wikipedia";
+        if (refData.url.includes('nikkei.com')) siteName = "日本経済新聞";
+        if (refData.url.includes('asahi.com')) siteName = "朝日新聞デジタル";
+        if (refData.url.includes('gov.jp')) siteName = "政府公的機関/統計局";
+        if (refData.url.includes('wired.jp')) siteName = "WIRED JP";
+
+        setRefData({
+          ...refData,
+          title: "（解析完了：記事タイトルを入力してください）",
+          author: siteName.charAt(0).toUpperCase() + siteName.slice(1)
+        });
+        alert("URLからサイト名を抽出しました！");
+      } catch (e) {
+        alert("有効なURLを入力してください。");
+      }
+      setIsAnalyzing(false);
+    }, 600);
+  };
+
   // --- 参考文献生成 ---
   const handleGenerateRef = () => {
     const date = new Date();
@@ -67,10 +103,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans pb-20">
       
-      {/* ▼▼▼ ヘッダー（修正：z-50で一番手前に！） ▼▼▼ */}
+      {/* ヘッダー */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          
           <div className="flex items-center gap-3">
             <img 
               src="/logo.jpg" 
@@ -83,21 +118,16 @@ export default function Home() {
           </div>
 
           <nav className="flex items-center gap-4">
-             {/* ブログへのリンクボタン */}
              <Link href="/blog/citation-rules" className="text-sm font-bold text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1">
                <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs hidden sm:inline-block">New</span>
                書き方ガイド
              </Link>
-             
-             {/* 自動保存メッセージ */}
              <div className={`hidden sm:block text-xs font-medium transition-opacity duration-500 ${isSaved ? 'text-green-600 opacity-100' : 'opacity-0'}`}>
                ✓ 保存済
              </div>
           </nav>
-
         </div>
       </header>
-      {/* ▲▲▲ ヘッダー終了 ▲▲▲ */}
 
       <main className="max-w-4xl mx-auto px-4 mt-6 space-y-6">
         
@@ -150,40 +180,58 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 参考文献ジェネレーター */}
+        {/* 参考文献ジェネレーター（進化版） */}
         <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-          <h2 className="text-base font-bold text-gray-800 mb-3 flex items-center gap-2">
-            📚 参考文献メーカー
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-            <input 
-              type="text" 
-              placeholder="タイトル" 
-              className="border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
-              value={refData.title}
-              onChange={(e) => setRefData({...refData, title: e.target.value})}
-            />
-            <input 
-              type="text" 
-              placeholder="著者名" 
-              className="border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
-              value={refData.author}
-              onChange={(e) => setRefData({...refData, author: e.target.value})}
-            />
-            <input 
-              type="text" 
-              placeholder="URL" 
-              className="border border-gray-300 rounded px-3 py-2 text-sm md:col-span-2 focus:ring-1 focus:ring-blue-500 outline-none"
-              value={refData.url}
-              onChange={(e) => setRefData({...refData, url: e.target.value})}
-            />
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-bold text-gray-800 flex items-center gap-2">
+              📚 参考文献メーカー
+            </h2>
+            <span className="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-bold">時短：URL解析機能付</span>
           </div>
+
+          <div className="space-y-3">
+            <div className="flex gap-2">
+              <input 
+                type="text" 
+                placeholder="URL（ここを埋めると自動入力が使えます）" 
+                className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-blue-50/30"
+                value={refData.url}
+                onChange={(e) => setRefData({...refData, url: e.target.value})}
+              />
+              <button 
+                onClick={handleAutoFill}
+                disabled={isAnalyzing}
+                className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded transition-all flex items-center gap-1 shadow-sm active:scale-95"
+              >
+                {isAnalyzing ? "解析中..." : "⚡自動入力"}
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <input 
+                type="text" 
+                placeholder="タイトル" 
+                className="border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                value={refData.title}
+                onChange={(e) => setRefData({...refData, title: e.target.value})}
+              />
+              <input 
+                type="text" 
+                placeholder="著者名 / サイト名" 
+                className="border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                value={refData.author}
+                onChange={(e) => setRefData({...refData, author: e.target.value})}
+              />
+            </div>
+          </div>
+
           <button 
             onClick={handleGenerateRef}
-            className="w-full bg-gray-800 hover:bg-gray-900 text-white text-sm font-bold py-2 rounded transition-colors"
+            className="w-full bg-gray-800 hover:bg-gray-900 text-white text-sm font-bold py-2 mt-3 rounded transition-colors"
           >
-            形式を作成
+            書式を作成
           </button>
+
           {generatedRef && (
             <div className="mt-3 p-3 bg-gray-50 border border-gray-200 rounded text-sm flex justify-between items-center">
               <code className="text-gray-700">{generatedRef}</code>
@@ -252,7 +300,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        
+
         {/* ガジェットコーナー */}
         <section className="mt-12">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -267,8 +315,8 @@ export default function Home() {
                     <img src="https://m.media-amazon.com/images/I/61SD-+LxQQL._AC_SX425_.jpg" alt="BoYata ノートパソコンスタンド" className="w-auto h-full object-contain" />
                 </div>
                 <div className="flex-1">
-                    <h4 className="font-bold text-gray-800 text-sm mb-1">BoYata ノートパソコンスタンド (17インチ対応)</h4>
-                    <p className="text-xs text-gray-500">大学生の定番。目線が上がって猫背・肩こりが劇的に改善します。絶対に導入すべき。</p>
+                    <h4 className="font-bold text-gray-800 text-sm mb-1">BoYata ノートパソコンスタンド</h4>
+                    <p className="text-xs text-gray-500">大学生の定番。目線が上がって猫背・肩こりが劇的に改善します。</p>
                 </div>
               </div>
               <div className="flex gap-2">
@@ -282,8 +330,8 @@ export default function Home() {
                     <img src="https://m.media-amazon.com/images/I/61spsKphurL._AC_SX679_.jpg" alt="iFala ブルーライトカットメガネ" className="w-auto h-full object-contain" />
                 </div>
                 <div className="flex-1">
-                    <h4 className="font-bold text-gray-800 text-sm mb-1">iFala ブルーライトカットメガネ (JIS規格/調光レンズ)</h4>
-                    <p className="text-xs text-gray-500">おしゃれな伊達メガネ風で普段使いもOK。UVカット機能付きでスマホ疲れも軽減。</p>
+                    <h4 className="font-bold text-gray-800 text-sm mb-1">ブルーライトカットメガネ</h4>
+                    <p className="text-xs text-gray-500">おしゃれな伊達メガネ風。長時間PCに向かう学生の目を守ります。</p>
                 </div>
               </div>
               <div className="flex gap-2">
