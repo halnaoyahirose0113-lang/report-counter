@@ -13,20 +13,55 @@ export default function Home() {
   const [isSaved, setIsSaved] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
+  // 案2: 締め切りタイマー用
+  const [deadline, setDeadline] = useState('');
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0 });
+
+  // 案3: 言い換え辞典（データ）
+  const phraseDictionary = [
+    { from: "〜だと思う", to: "〜と考えられる / 〜と推察される" },
+    { from: "だから", to: "したがって / ゆえに" },
+    { from: "でも", to: "しかしながら / 一方で" },
+    { from: "すごく", to: "非常に / 極めて / 著しく" },
+    { from: "いろんな", to: "様々な / 多様な" },
+  ];
+
   // --- 自動保存 ---
   useEffect(() => {
     const savedText = localStorage.getItem('report-text');
+    const savedDeadline = localStorage.getItem('report-deadline');
     if (savedText) setText(savedText);
+    if (savedDeadline) setDeadline(savedDeadline);
   }, []);
 
   useEffect(() => {
+    if (text) localStorage.setItem('report-text', text);
+    if (deadline) localStorage.setItem('report-deadline', deadline);
     if (text) {
-      localStorage.setItem('report-text', text);
-      setIsSaved(true);
-      const timer = setTimeout(() => setIsSaved(false), 2000);
-      return () => clearTimeout(timer);
+        setIsSaved(true);
+        const timer = setTimeout(() => setIsSaved(false), 2000);
+        return () => clearTimeout(timer);
     }
-  }, [text]);
+  }, [text, deadline]);
+
+  // 案2: タイマー計算ロジック
+  useEffect(() => {
+    if (!deadline) return;
+    const timer = setInterval(() => {
+      const diff = new Date(deadline).getTime() - new Date().getTime();
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, mins: 0 });
+      } else {
+        setTimeLeft({
+          days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+          mins: Math.floor((diff / (1000 * 60)) % 60),
+        });
+      }
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [deadline]);
+
 
   const handleCopyText = () => {
     if (!text) return;
@@ -97,6 +132,27 @@ export default function Home() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 mt-4 space-y-6">
+
+        {/* ⏳ 案2: 締め切りタイマー (追加機能) */}
+        <div className="bg-gray-900 rounded-2xl p-4 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col gap-1 w-full sm:w-auto text-center sm:text-left">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">提出期限まで残り</span>
+            <div className="flex items-baseline justify-center sm:justify-start gap-2">
+              <span className="text-3xl font-black text-yellow-400 tabular-nums">{timeLeft.days}</span><span className="text-xs font-bold">日</span>
+              <span className="text-3xl font-black text-yellow-400 tabular-nums">{timeLeft.hours}</span><span className="text-xs font-bold">時間</span>
+              <span className="text-3xl font-black text-yellow-400 tabular-nums">{timeLeft.mins}</span><span className="text-xs font-bold">分</span>
+            </div>
+          </div>
+          <div className="flex flex-col gap-1 w-full sm:w-auto">
+             <span className="text-[9px] text-gray-500 font-bold ml-1">締め切り日時を設定</span>
+             <input 
+                type="datetime-local" 
+                className="bg-gray-800 text-xs font-bold p-2.5 rounded-lg border border-gray-700 outline-none focus:border-yellow-400 w-full text-white"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+              />
+          </div>
+        </div>
         
         {/* メインツール */}
         <section className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
@@ -121,6 +177,23 @@ export default function Home() {
             <div className="border-l border-white/20"><p className="text-[9px] font-bold opacity-80 uppercase tracking-widest">空白なし</p><p className="text-2xl font-black text-yellow-300 tabular-nums">{stats.countWithoutSpaces}</p></div>
             <div className="border-l border-white/20"><p className="text-[9px] font-bold opacity-80 uppercase tracking-widest">行数</p><p className="text-2xl font-black tabular-nums">{stats.lines}</p></div>
           </div>
+        </section>
+
+        {/* ✍️ 案3: レポート言い換え辞典 (追加機能) */}
+        <section className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100">
+          <h3 className="text-sm font-bold text-blue-900 mb-3 flex items-center gap-2">
+            ✍️ レポートで使える「神」言い換え辞典
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {phraseDictionary.map((item, idx) => (
+              <div key={idx} className="bg-white/80 p-2.5 rounded-lg flex items-center justify-between text-[11px] border border-blue-50 shadow-sm">
+                <span className="text-red-400 font-bold">{item.from}</span>
+                <span className="text-gray-400 px-2">→</span>
+                <span className="text-blue-700 font-bold flex-1 text-right">{item.to}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-[9px] text-gray-400 mt-3 text-center">※文字数が足りない時や、文章を賢く見せたい時に使ってください。</p>
         </section>
 
         {/* 参考文献メーカー */}
