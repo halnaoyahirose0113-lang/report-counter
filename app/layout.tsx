@@ -13,6 +13,10 @@ export const metadata: Metadata = {
     shortcut: '/logo.jpg',
     apple: '/logo.jpg',
   },
+  // 👇 ここにサーチコンソールのコード（contentの中身）を入れてください！
+  verification: {
+    google: 'ここにサーチコンソールのコードを貼り付け', 
+  },
 }
 
 export default function RootLayout({
@@ -20,7 +24,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // 👇 社長の測定IDをセットしました！
+  // 社長のGoogle Analytics ID
   const GA_ID = 'G-SHFBCNHTNX'; 
 
   return (
@@ -28,6 +32,14 @@ export default function RootLayout({
       <head>
         <meta name="apple-mobile-web-app-title" content="レポカン" />
         <meta name="theme-color" content="#ffffff" />
+        
+        {/* 👇 Google AdSense のコード（社長専用ID設定済み） */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4656581903403841"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </head>
       <body className={inter.className}>
         
