@@ -11,7 +11,7 @@ export default function Home() {
   const [refData, setRefData] = useState({ title: '', author: '', url: '' });
   const [generatedRef, setGeneratedRef] = useState('');
   const [isSaved, setIsSaved] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false); // 解析中フラグ
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   // --- 自動保存 ---
   useEffect(() => {
@@ -28,7 +28,6 @@ export default function Home() {
     }
   }, [text]);
 
-  // --- コピー & クリア ---
   const handleCopyText = () => {
     if (!text) return;
     navigator.clipboard.writeText(text);
@@ -36,13 +35,12 @@ export default function Home() {
   };
 
   const handleClearText = () => {
-    if (confirm('入力内容をすべて消去しますか？（復元できません）')) {
+    if (confirm('入力内容をすべて消去しますか？')) {
       setText('');
       localStorage.removeItem('report-text');
     }
   };
 
-  // --- 文字数カウントロジック ---
   const stats = useMemo(() => {
     let processedText = text;
     if (excludeReferences) {
@@ -57,42 +55,24 @@ export default function Home() {
     return { countWithSpaces, countWithoutSpaces, lines };
   }, [text, excludeReferences]);
 
-  // --- ★ 進化機能：URLから情報を自動抽出（擬似解析） ---
   const handleAutoFill = async () => {
-    if (!refData.url) {
-      alert("URLを入力してから「⚡自動入力」を押してください");
-      return;
-    }
-
+    if (!refData.url) return;
     setIsAnalyzing(true);
-    
-    // URLからドメイン名を抽出してサイト名を推測するロジック
     setTimeout(() => {
       try {
         const urlObj = new URL(refData.url);
         let siteName = urlObj.hostname.replace('www.', '').split('.')[0];
-        
-        // 有名ドメインの日本語変換
         if (refData.url.includes('wikipedia.org')) siteName = "Wikipedia";
-        if (refData.url.includes('nikkei.com')) siteName = "日本経済新聞";
-        if (refData.url.includes('asahi.com')) siteName = "朝日新聞デジタル";
-        if (refData.url.includes('gov.jp')) siteName = "政府公的機関/統計局";
-        if (refData.url.includes('wired.jp')) siteName = "WIRED JP";
-
         setRefData({
           ...refData,
-          title: "（解析完了：記事タイトルを入力してください）",
+          title: "（解析完了：記事タイトルを入力）",
           author: siteName.charAt(0).toUpperCase() + siteName.slice(1)
         });
-        alert("URLからサイト名を抽出しました！");
-      } catch (e) {
-        alert("有効なURLを入力してください。");
-      }
+      } catch (e) {}
       setIsAnalyzing(false);
     }, 600);
   };
 
-  // --- 参考文献生成 ---
   const handleGenerateRef = () => {
     const date = new Date();
     const today = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
@@ -106,260 +86,129 @@ export default function Home() {
       {/* ヘッダー */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img 
-              src="/logo.jpg" 
-              alt="ロゴ" 
-              className="w-8 h-8 rounded-lg object-cover shadow-sm border border-gray-100"
-            />
-            <h1 className="text-lg font-bold tracking-tight text-gray-900 sm:text-xl">
-              レポート文字数カウンター
-            </h1>
+          <div className="flex items-center gap-2">
+            <img src="/logo.jpg" alt="ロゴ" className="w-8 h-8 rounded-lg object-cover" />
+            <h1 className="text-base font-bold text-gray-900 sm:text-xl text-nowrap">レポート文字数カウンター</h1>
           </div>
-
-          <nav className="flex items-center gap-4">
-             <Link href="/blog/citation-rules" className="text-sm font-bold text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1">
-               <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs hidden sm:inline-block">New</span>
-               書き方ガイド
-             </Link>
-             <div className={`hidden sm:block text-xs font-medium transition-opacity duration-500 ${isSaved ? 'text-green-600 opacity-100' : 'opacity-0'}`}>
-               ✓ 保存済
-             </div>
+          <nav className="flex items-center gap-3">
+             <Link href="/blog/citation-rules" className="text-[10px] sm:text-sm font-bold text-blue-600 border border-blue-200 bg-blue-50 px-3 py-1.5 rounded-full">書き方ガイド</Link>
           </nav>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 mt-6 space-y-6">
+      <main className="max-w-4xl mx-auto px-4 mt-4 space-y-6">
         
-        {/* メイン機能エリア */}
+        {/* メインツール */}
         <section className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
-          <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex flex-wrap items-center justify-between gap-3">
+          <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
             <div className="flex gap-2">
-                <button onClick={handleCopyText} className="text-xs bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 px-3 py-1.5 rounded transition-colors shadow-sm font-medium">
-                    📋 全文コピー
-                </button>
-                <button onClick={handleClearText} className="text-xs bg-white border border-gray-300 hover:text-red-600 hover:border-red-200 text-gray-500 px-3 py-1.5 rounded transition-colors shadow-sm">
-                    🗑️ クリア
-                </button>
+                <button onClick={handleCopyText} className="text-[10px] bg-white border border-gray-300 px-3 py-1 rounded font-bold shadow-sm">コピー</button>
+                <button onClick={handleClearText} className="text-[10px] bg-white border border-gray-300 px-3 py-1 rounded text-gray-400">クリア</button>
             </div>
-            <label className="flex items-center cursor-pointer select-none">
-              <span className="mr-2 text-xs font-bold text-gray-600">参考文献を除外</span>
-              <div className="relative">
-                <input 
-                  type="checkbox" 
-                  className="sr-only" 
-                  checked={excludeReferences}
-                  onChange={(e) => setExcludeReferences(e.target.checked)}
-                />
-                <div className={`block w-10 h-6 rounded-full transition-colors ${excludeReferences ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
-                <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${excludeReferences ? 'transform translate-x-4' : ''}`}></div>
-              </div>
+            <label className="flex items-center cursor-pointer">
+              <span className="mr-2 text-[10px] font-bold text-gray-500 uppercase">参考文献を除外</span>
+              <input type="checkbox" className="w-4 h-4 text-blue-600 rounded" checked={excludeReferences} onChange={(e) => setExcludeReferences(e.target.checked)} />
             </label>
           </div>
-
           <textarea
-            className="w-full h-[60vh] p-6 text-base leading-relaxed text-gray-700 focus:outline-none resize-none"
-            placeholder="ここに文章を入力...（自動保存されます）"
+            className="w-full h-[45vh] p-4 text-base leading-relaxed text-gray-700 focus:outline-none resize-none"
+            placeholder="ここにレポートを入力してください..."
             value={text}
             onChange={(e) => setText(e.target.value)}
           ></textarea>
-
-          <div className="bg-blue-50/90 backdrop-blur px-4 py-3 border-t border-blue-100 grid grid-cols-3 gap-2 text-center sticky bottom-0">
-            <div>
-              <p className="text-[10px] text-blue-600 font-bold uppercase">文字数 (すべて)</p>
-              <p className="text-xl font-extrabold text-gray-800">{stats.countWithSpaces}</p>
-            </div>
-            <div className="border-l border-blue-200">
-              <p className="text-[10px] text-blue-600 font-bold uppercase">文字数 (空白なし)</p>
-              <p className="text-xl font-extrabold text-gray-800">{stats.countWithoutSpaces}</p>
-            </div>
-            <div className="border-l border-blue-200">
-              <p className="text-[10px] text-blue-600 font-bold uppercase">行数</p>
-              <p className="text-xl font-extrabold text-gray-800">{stats.lines}</p>
-            </div>
+          <div className="bg-blue-600 text-white px-4 py-4 grid grid-cols-3 gap-1 text-center sticky bottom-0 z-20 shadow-lg">
+            <div><p className="text-[9px] font-bold opacity-80 uppercase tracking-widest">すべて</p><p className="text-2xl font-black tabular-nums">{stats.countWithSpaces}</p></div>
+            <div className="border-l border-white/20"><p className="text-[9px] font-bold opacity-80 uppercase tracking-widest">空白なし</p><p className="text-2xl font-black text-yellow-300 tabular-nums">{stats.countWithoutSpaces}</p></div>
+            <div className="border-l border-white/20"><p className="text-[9px] font-bold opacity-80 uppercase tracking-widest">行数</p><p className="text-2xl font-black tabular-nums">{stats.lines}</p></div>
           </div>
         </section>
 
-        {/* 参考文献ジェネレーター（進化版） */}
+        {/* 参考文献メーカー */}
         <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-bold text-gray-800 flex items-center gap-2">
-              📚 参考文献メーカー
-            </h2>
-            <span className="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-bold">時短：URL解析機能付</span>
-          </div>
-
+          <h2 className="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">📚 参考文献メーカー</h2>
           <div className="space-y-3">
             <div className="flex gap-2">
-              <input 
-                type="text" 
-                placeholder="URL（ここを埋めると自動入力が使えます）" 
-                className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-blue-50/30"
-                value={refData.url}
-                onChange={(e) => setRefData({...refData, url: e.target.value})}
-              />
-              <button 
-                onClick={handleAutoFill}
-                disabled={isAnalyzing}
-                className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded transition-all flex items-center gap-1 shadow-sm active:scale-95"
-              >
-                {isAnalyzing ? "解析中..." : "⚡自動入力"}
-              </button>
+              <input type="text" placeholder="URLを貼って自動入力" className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm outline-none bg-blue-50/30" value={refData.url} onChange={(e) => setRefData({...refData, url: e.target.value})} />
+              <button onClick={handleAutoFill} disabled={isAnalyzing} className="bg-blue-600 text-white text-[10px] font-bold px-4 py-2 rounded shadow-md">{isAnalyzing ? "解析中" : "⚡自動入力"}</button>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <input 
-                type="text" 
-                placeholder="タイトル" 
-                className="border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
-                value={refData.title}
-                onChange={(e) => setRefData({...refData, title: e.target.value})}
-              />
-              <input 
-                type="text" 
-                placeholder="著者名 / サイト名" 
-                className="border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 outline-none"
-                value={refData.author}
-                onChange={(e) => setRefData({...refData, author: e.target.value})}
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <input type="text" placeholder="タイトル" className="border border-gray-300 rounded px-3 py-2 text-xs outline-none" value={refData.title} onChange={(e) => setRefData({...refData, title: e.target.value})} />
+              <input type="text" placeholder="著者/サイト名" className="border border-gray-300 rounded px-3 py-2 text-xs outline-none" value={refData.author} onChange={(e) => setRefData({...refData, author: e.target.value})} />
             </div>
+            <button onClick={handleGenerateRef} className="w-full bg-gray-800 text-white text-sm font-bold py-2.5 rounded">書式を作成</button>
           </div>
-
-          <button 
-            onClick={handleGenerateRef}
-            className="w-full bg-gray-800 hover:bg-gray-900 text-white text-sm font-bold py-2 mt-3 rounded transition-colors"
-          >
-            書式を作成
-          </button>
-
           {generatedRef && (
-            <div className="mt-3 p-3 bg-gray-50 border border-gray-200 rounded text-sm flex justify-between items-center">
-              <code className="text-gray-700">{generatedRef}</code>
-              <button onClick={() => navigator.clipboard.writeText(generatedRef)} className="text-blue-600 text-xs font-bold hover:underline ml-2">コピー</button>
+            <div className="mt-3 p-3 bg-gray-50 border border-dashed border-gray-300 rounded text-[11px] flex justify-between items-center">
+              <code className="text-gray-700 truncate mr-4">{generatedRef}</code>
+              <button onClick={() => navigator.clipboard.writeText(generatedRef)} className="text-blue-600 font-bold shrink-0">コピー</button>
             </div>
           )}
         </section>
 
-        {/* Prime Student バナー */}
-        <div className="my-8">
-          <a 
-            href="https://www.amazon.co.jp/%E5%AD%A6%E7%94%9F-%E5%A4%A7%E5%AD%A6%E7%94%9F-%E6%95%99%E7%A7%91%E6%9B%B8-%E6%9C%AC-student/b?ie=UTF8&node=2410972051&tag=acky0113-22"
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="block group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#00A8E1] to-[#007399] p-6 text-white shadow-lg transition-transform hover:scale-[1.02]"
-          >
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="text-center md:text-left">
-                <h3 className="text-xl font-bold text-yellow-300 mb-1">🎓 学生限定：Amazon Primeが6ヶ月無料！</h3>
-                <p className="text-sm text-white/90">本のお急ぎ便も無料・映画も見放題。入らないと損です。</p>
+        {/* 📖 神アイテムコーナー (書籍) */}
+        <section className="mt-10">
+          <h3 className="text-base font-bold text-gray-800 mb-5 flex items-center gap-2">
+            📖 レポート作成に役立つ神アイテム
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-center text-center">
+              <img src="https://images-na.ssl-images-amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg" alt="最新版 論文の教室" className="w-16 h-24 object-cover mb-3 rounded" />
+              <h4 className="font-bold text-gray-800 text-[11px] h-8 flex items-center">最新版 論文の教室</h4>
+              <div className="flex w-full gap-1 mt-auto">
+                <a href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" className="flex-1 bg-[#FF9900] text-white text-[8px] font-bold py-2 rounded-lg text-center">Amazon</a>
+                <a href="https://a.r10.to/hkR3I2" className="flex-1 bg-[#BF0000] text-white text-[8px] font-bold py-2 rounded-lg text-center">楽天</a>
               </div>
-              <span className="bg-yellow-400 text-blue-900 text-sm font-bold px-6 py-2 rounded-full shadow-md group-hover:bg-yellow-300 transition-colors">
-                無料で試す ↗
-              </span>
             </div>
-            <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-            <div className="absolute -left-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+            <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-center text-center">
+              <img src="https://images-na.ssl-images-amazon.com/images/P/B077RWQNKN.09.LZZZZZZZ.jpg" alt="コピペと言われないレポート" className="w-16 h-24 object-cover mb-3 rounded" />
+              <h4 className="font-bold text-gray-800 text-[11px] h-8 flex items-center">コピペと言われない書き方</h4>
+              <div className="flex w-full gap-1 mt-auto">
+                <a href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" className="flex-1 bg-[#FF9900] text-white text-[8px] font-bold py-2 rounded-lg text-center">Amazon</a>
+                <a href="https://a.r10.to/h5fKiw" className="flex-1 bg-[#BF0000] text-white text-[8px] font-bold py-2 rounded-lg text-center">楽天</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 💻 ガジェットコーナー */}
+        <section className="mt-10">
+          <h3 className="text-base font-bold text-gray-800 mb-5 flex items-center gap-2">
+            💻 執筆が爆速になる神ガジェット
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-center text-center">
+              <img src="https://m.media-amazon.com/images/I/61SD-+LxQQL._AC_SX425_.jpg" alt="PCスタンド" className="w-16 h-16 object-contain mb-3 mt-4" />
+              <h4 className="font-bold text-gray-800 text-[11px] h-8 flex items-center">BoYata PCスタンド</h4>
+              <div className="flex w-full gap-1 mt-auto">
+                <a href="https://www.amazon.co.jp/dp/B07H774Q42?tag=acky0113-22" className="flex-1 bg-[#FF9900] text-white text-[8px] font-bold py-2 rounded-lg text-center">Amazon</a>
+                <a href="https://a.r10.to/h5n0fy" className="flex-1 bg-[#BF0000] text-white text-[8px] font-bold py-2 rounded-lg text-center">楽天</a>
+              </div>
+            </div>
+            <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-center text-center">
+              <img src="https://m.media-amazon.com/images/I/61spsKphurL._AC_SX679_.jpg" alt="ブルーライトカットメガネ" className="w-16 h-16 object-contain mb-3 mt-4" />
+              <h4 className="font-bold text-gray-800 text-[11px] h-8 flex items-center">ブルーライトカットメガネ</h4>
+              <div className="flex w-full gap-1 mt-auto">
+                <a href="https://www.amazon.co.jp/dp/B0FRZG38TW?tag=acky0113-22" className="flex-1 bg-[#FF9900] text-white text-[8px] font-bold py-2 rounded-lg text-center">Amazon</a>
+                <a href="https://a.r10.to/hP5chl" className="flex-1 bg-[#BF0000] text-white text-[8px] font-bold py-2 rounded-lg text-center">楽天</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Amazon Prime バナー */}
+        <div className="my-8">
+          <a href="https://www.amazon.co.jp/%E5%AD%A6%E7%94%9F-%E5%A4%A7%E5%AD%A6%E7%94%9F-%E6%95%99%E7%A7%91%E6%9B%B8-%E6%9C%AC-student/b?ie=UTF8&node=2410972051&tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="block rounded-2xl bg-gradient-to-br from-[#00A8E1] to-[#007399] p-5 text-white shadow-lg transition-transform hover:scale-[1.01]">
+            <p className="text-sm font-black mb-1">🎓 学生限定：Amazon Primeが6ヶ月無料！</p>
+            <p className="text-[11px] opacity-90 text-blue-50">本が最大10%還元・お急ぎ便無料・映画も見放題。</p>
           </a>
         </div>
 
-        {/* 書籍コーナー */}
-        <section className="mt-8">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-            📖 レポート作成に役立つ神アイテム
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
-              <div className="flex items-start mb-3">
-                <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
-                    <img src="https://images-na.ssl-images-amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg" alt="最新版 論文の教室" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-1">
-                    <h4 className="font-bold text-gray-800 text-sm mb-1">最新版 論文の教室 レポートから卒論まで</h4>
-                    <p className="text-xs text-gray-500">「そもそも何を書けばいいかわからない」ならこれ。伝説のベストセラー最新版。</p>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <a href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">Amazon</a>
-                <a href="https://a.r10.to/hkR3I2" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">楽天</a>
-              </div>
-            </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
-              <div className="flex items-start mb-3">
-                <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
-                    <img src="https://images-na.ssl-images-amazon.com/images/P/B077RWQNKN.09.LZZZZZZZ.jpg" alt="コピペと言われないレポートの書き方" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-1">
-                    <h4 className="font-bold text-gray-800 text-sm mb-1">コピペと言われないレポートの書き方教室</h4>
-                    <p className="text-xs text-gray-500">コピペ判定が怖いならこれを読むべき。引用のルールが完璧にわかります。</p>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <a href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">Amazon</a>
-                <a href="https://a.r10.to/h5fKiw" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">楽天</a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ガジェットコーナー */}
-        <section className="mt-12">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-            💻 レポート執筆が捗るデスク環境
-            <span className="text-xs bg-blue-100 text-blue-800 font-medium px-2 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">おすすめ</span>
-          </h3>
-          <p className="text-sm text-gray-500 mb-6">長時間作業の「肩こり・目の疲れ」を軽減する定番アイテム。</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
-              <div className="flex items-start mb-3">
-                <div className="w-24 h-24 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4 flex items-center justify-center p-2">
-                    <img src="https://m.media-amazon.com/images/I/61SD-+LxQQL._AC_SX425_.jpg" alt="BoYata ノートパソコンスタンド" className="w-auto h-full object-contain" />
-                </div>
-                <div className="flex-1">
-                    <h4 className="font-bold text-gray-800 text-sm mb-1">BoYata ノートパソコンスタンド</h4>
-                    <p className="text-xs text-gray-500">大学生の定番。目線が上がって猫背・肩こりが劇的に改善します。</p>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <a href="https://www.amazon.co.jp/dp/B07H774Q42?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">Amazon</a>
-                <a href="https://a.r10.to/h5n0fy" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">楽天</a>
-              </div>
-            </div>
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
-              <div className="flex items-start mb-3">
-                <div className="w-24 h-24 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4 flex items-center justify-center p-2">
-                    <img src="https://m.media-amazon.com/images/I/61spsKphurL._AC_SX679_.jpg" alt="iFala ブルーライトカットメガネ" className="w-auto h-full object-contain" />
-                </div>
-                <div className="flex-1">
-                    <h4 className="font-bold text-gray-800 text-sm mb-1">ブルーライトカットメガネ</h4>
-                    <p className="text-xs text-gray-500">おしゃれな伊達メガネ風。長時間PCに向かう学生の目を守ります。</p>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <a href="https://www.amazon.co.jp/dp/B0FRZG38TW?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">Amazon</a>
-                <a href="https://a.r10.to/hP5chl" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">楽天</a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* お役立ち記事コーナー */}
-        <section className="mb-12 mt-12">
-          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-            📝 レポートの書き方ガイド
-          </h3>
-          <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
-            <Link href="/blog/citation-rules" className="block group">
-              <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-base">
-                【コピペOK】参考文献の書き方完全ガイド！URLや書籍のルールを実例で解説
-              </h4>
-              <p className="text-sm text-gray-500">
-                本やWebサイトを引用するときの正しい書き方を知っていますか？コピペで使えるテンプレートと、NG例をまとめました。
-              </p>
-              <div className="mt-3 text-xs font-bold text-gray-400 flex items-center">
-                記事を読む <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
-              </div>
-            </Link>
-          </div>
+        {/* ブログ・SEO */}
+        <section className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+          <Link href="/blog/citation-rules" className="group block">
+            <h3 className="font-bold text-blue-600 group-hover:underline mb-1 text-sm">📝 参考文献の書き方完全ガイド</h3>
+            <p className="text-[11px] text-gray-500">本やWebサイトを引用するときの正しい書き方を実例でわかりやすく解説。</p>
+          </Link>
         </section>
 
         <SeoContent />
@@ -367,11 +216,10 @@ export default function Home() {
       </main>
       
       {/* フッター */}
-      <footer className="max-w-4xl mx-auto px-4 mt-12 mb-8 text-center text-gray-400 text-sm">
-        <div className="mb-2">
-          <Link href="/privacy" className="hover:text-gray-600 transition-colors underline decoration-gray-300 underline-offset-4">
-            プライバシーポリシー
-          </Link>
+      <footer className="max-w-4xl mx-auto px-4 mt-16 mb-8 text-center text-gray-400 text-[10px]">
+        <div className="flex justify-center gap-8 mb-3 font-semibold text-nowrap">
+          <Link href="/privacy" className="hover:text-gray-600 underline underline-offset-4 decoration-gray-200">プライバシーポリシー</Link>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSeumYrx_6P4aHZZGPBHhvF-0F9iATjUw1baHombHHsj7G59Kw/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" className="hover:text-gray-600 underline underline-offset-4 decoration-gray-200">お問合せ</a>
         </div>
         <p>&copy; 2025 Acky</p>
       </footer>
