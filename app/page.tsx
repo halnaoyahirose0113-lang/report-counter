@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import Link from 'next/link'; // 👈 リンク用に追加
+import Link from 'next/link';
 import { SeoContent } from './components/SeoContent'; 
 
 export default function Home() {
@@ -67,8 +67,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans pb-20">
       
-      {/* ▼▼▼ ヘッダー（ブログリンク入り） ▼▼▼ */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+      {/* ▼▼▼ ヘッダー（修正：z-50で一番手前に！） ▼▼▼ */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           
           <div className="flex items-center gap-3">
@@ -83,7 +83,7 @@ export default function Home() {
           </div>
 
           <nav className="flex items-center gap-4">
-             {/* 👇 ブログへのリンクボタン */}
+             {/* ブログへのリンクボタン */}
              <Link href="/blog/citation-rules" className="text-sm font-bold text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1">
                <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs hidden sm:inline-block">New</span>
                書き方ガイド
@@ -294,7 +294,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ▼▼▼ お役立ち記事コーナー（追加） ▼▼▼ */}
+        {/* お役立ち記事コーナー */}
         <section className="mb-12 mt-12">
           <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
             📝 レポートの書き方ガイド
@@ -313,7 +313,6 @@ export default function Home() {
             </Link>
           </div>
         </section>
-        {/* ▲▲▲ お役立ち記事コーナー終了 ▲▲▲ */}
 
         <SeoContent />
 
