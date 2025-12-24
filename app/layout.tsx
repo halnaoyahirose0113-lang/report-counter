@@ -13,11 +13,11 @@ export const metadata: Metadata = {
     shortcut: '/logo.jpg',
     apple: '/logo.jpg',
   },
-  // 👇 Search Consoleの確認コード（そのままでOK）
+  // Search Consoleのコード
   verification: {
     google: 'SyqUrfgc1zTfMYdiIE8IX6T46WQ_785iDjCbPkuoIzk', 
   },
-  // 👇【重要】AdSenseの所有権確認用タグ（これがあると審査に通りやすくなります）
+  // AdSense所有権確認コード
   other: {
     'google-adsense-account': 'ca-pub-4656581903403841',
   },
@@ -36,13 +36,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="レポカン" />
         <meta name="theme-color" content="#ffffff" />
         
-        {/* 👇 AdSense本体のコード（ここに入っていれば全ページで有効になります） */}
-        <Script
-          async
+        {/* ▼▼▼ ここを「生のタグ」に変更しました（最強の対策） ▼▼▼ */}
+        <script 
+          async 
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4656581903403841"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        ></script>
+        {/* ▲▲▲ これならGoogleロボットが絶対に見つけられます ▲▲▲ */}
       </head>
       <body className={inter.className}>
         
