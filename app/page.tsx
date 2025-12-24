@@ -297,7 +297,13 @@ export default function Home() {
 
       </main>
       
-      <footer className="max-w-4xl mx-auto px-4 mt-12 text-center text-gray-400 text-sm">
+      {/* フッター */}
+      <footer className="max-w-4xl mx-auto px-4 mt-12 mb-8 text-center text-gray-400 text-sm">
+        <div className="mb-2">
+          <a href="/privacy" className="hover:text-gray-600 transition-colors underline decoration-gray-300 underline-offset-4">
+            プライバシーポリシー
+          </a>
+        </div>
         <p>&copy; 2025 Acky</p>
       </footer>
     </div>
