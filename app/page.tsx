@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import Link from 'next/link'; // 👈 リンク用に追加
 import { SeoContent } from './components/SeoContent'; 
 
 export default function Home() {
@@ -66,9 +67,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans pb-20">
       
-      {/* ヘッダー */}
+      {/* ▼▼▼ ヘッダー（ブログリンク入り） ▼▼▼ */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+          
           <div className="flex items-center gap-3">
             <img 
               src="/logo.jpg" 
@@ -79,11 +81,23 @@ export default function Home() {
               レポート文字数カウンター
             </h1>
           </div>
-          <div className={`text-xs font-medium transition-opacity duration-500 ${isSaved ? 'text-green-600 opacity-100' : 'opacity-0'}`}>
-            ✓ 自動保存しました
-          </div>
+
+          <nav className="flex items-center gap-4">
+             {/* 👇 ブログへのリンクボタン */}
+             <Link href="/blog/citation-rules" className="text-sm font-bold text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1">
+               <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-xs hidden sm:inline-block">New</span>
+               書き方ガイド
+             </Link>
+             
+             {/* 自動保存メッセージ */}
+             <div className={`hidden sm:block text-xs font-medium transition-opacity duration-500 ${isSaved ? 'text-green-600 opacity-100' : 'opacity-0'}`}>
+               ✓ 保存済
+             </div>
+          </nav>
+
         </div>
       </header>
+      {/* ▲▲▲ ヘッダー終了 ▲▲▲ */}
 
       <main className="max-w-4xl mx-auto px-4 mt-6 space-y-6">
         
@@ -178,10 +192,9 @@ export default function Home() {
           )}
         </section>
 
-        {/* 👇👇👇 Prime Student 訴求バナー (URL適用済み) 👇👇👇 */}
+        {/* Prime Student バナー */}
         <div className="my-8">
           <a 
-            // いただいたURLにあなたのタグ(acky0113-22)を追加しました！
             href="https://www.amazon.co.jp/%E5%AD%A6%E7%94%9F-%E5%A4%A7%E5%AD%A6%E7%94%9F-%E6%95%99%E7%A7%91%E6%9B%B8-%E6%9C%AC-student/b?ie=UTF8&node=2410972051&tag=acky0113-22"
             target="_blank" 
             rel="noopener noreferrer"
@@ -196,12 +209,10 @@ export default function Home() {
                 無料で試す ↗
               </span>
             </div>
-            {/* 背景の装飾 */}
             <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
             <div className="absolute -left-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
           </a>
         </div>
-        {/* 👆👆👆 追加ここまで 👆👆👆 */}
 
         {/* 書籍コーナー */}
         <section className="mt-8">
@@ -209,8 +220,6 @@ export default function Home() {
             📖 レポート作成に役立つ神アイテム
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
-            {/* 書籍1 */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-start mb-3">
                 <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
@@ -226,8 +235,6 @@ export default function Home() {
                 <a href="https://a.r10.to/hkR3I2" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">楽天</a>
               </div>
             </div>
-
-            {/* 書籍2 */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-start mb-3">
                 <div className="w-20 h-28 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4">
@@ -243,7 +250,6 @@ export default function Home() {
                 <a href="https://a.r10.to/h5fKiw" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">楽天</a>
               </div>
             </div>
-
           </div>
         </section>
         
@@ -255,8 +261,6 @@ export default function Home() {
           </h3>
           <p className="text-sm text-gray-500 mb-6">長時間作業の「肩こり・目の疲れ」を軽減する定番アイテム。</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
-            {/* ガジェット1: PCスタンド (BoYata) */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-start mb-3">
                 <div className="w-24 h-24 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4 flex items-center justify-center p-2">
@@ -272,8 +276,6 @@ export default function Home() {
                 <a href="https://a.r10.to/h5n0fy" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">楽天</a>
               </div>
             </div>
-
-            {/* ガジェット2: ブルーライトカットメガネ (iFala) */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-start mb-3">
                 <div className="w-24 h-24 bg-gray-200 flex-shrink-0 rounded overflow-hidden mr-4 flex items-center justify-center p-2">
@@ -289,9 +291,29 @@ export default function Home() {
                 <a href="https://a.r10.to/hP5chl" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 px-1 rounded text-center transition-colors">楽天</a>
               </div>
             </div>
-
           </div>
         </section>
+
+        {/* ▼▼▼ お役立ち記事コーナー（追加） ▼▼▼ */}
+        <section className="mb-12 mt-12">
+          <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            📝 レポートの書き方ガイド
+          </h3>
+          <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
+            <Link href="/blog/citation-rules" className="block group">
+              <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-base">
+                【コピペOK】参考文献の書き方完全ガイド！URLや書籍のルールを実例で解説
+              </h4>
+              <p className="text-sm text-gray-500">
+                本やWebサイトを引用するときの正しい書き方を知っていますか？コピペで使えるテンプレートと、NG例をまとめました。
+              </p>
+              <div className="mt-3 text-xs font-bold text-gray-400 flex items-center">
+                記事を読む <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </Link>
+          </div>
+        </section>
+        {/* ▲▲▲ お役立ち記事コーナー終了 ▲▲▲ */}
 
         <SeoContent />
 
@@ -300,9 +322,9 @@ export default function Home() {
       {/* フッター */}
       <footer className="max-w-4xl mx-auto px-4 mt-12 mb-8 text-center text-gray-400 text-sm">
         <div className="mb-2">
-          <a href="/privacy" className="hover:text-gray-600 transition-colors underline decoration-gray-300 underline-offset-4">
+          <Link href="/privacy" className="hover:text-gray-600 transition-colors underline decoration-gray-300 underline-offset-4">
             プライバシーポリシー
-          </a>
+          </Link>
         </div>
         <p>&copy; 2025 Acky</p>
       </footer>
