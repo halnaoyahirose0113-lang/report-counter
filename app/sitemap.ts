@@ -1,11 +1,14 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // 👇 ここをあなたのサイトのURL（https://〜）に書き換えてください！
+  const baseUrl = 'https://report-counter.vercel.app/' 
+
   return [
     {
-      url: 'https://report-counter.vercel.app', // あなたのURL
+      url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: 'daily',
       priority: 1,
     },
   ]
