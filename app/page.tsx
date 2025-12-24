@@ -323,6 +323,17 @@ export default function Home() {
                 </p>
               </Link>
             </div>
+            {/* 記事3: 構成（NEW!） */}
+            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
+              <Link href="/blog/report-structure" className="block group h-full flex flex-col">
+                <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
+                  【テンプレ】序論・本論・結論の書き方
+                </h4>
+                <p className="text-[10px] text-gray-500 mt-auto">
+                  レポート構成の黄金比率と書き出しの例文。
+                </p>
+              </Link>
+            </div>
 
           </div>
         </section>
