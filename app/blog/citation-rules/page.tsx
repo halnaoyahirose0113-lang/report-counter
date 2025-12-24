@@ -1,115 +1,128 @@
-'use client';
-
 import Link from 'next/link';
-import { Metadata } from 'next';
+import Image from 'next/image';
+
+export const metadata = {
+  title: '【コピペOK】参考文献の書き方完全ガイド！URLや書籍のルールを実例で解説 | レポート文字数カウンター',
+  description: 'レポートや卒論で必須の「参考文献」の書き方を解説。書籍、Webサイト、論文などケース別のテンプレートと、カンマやピリオドの正しい位置も網羅。',
+};
 
 export default function CitationRules() {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans pb-20">
+    <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
       
       {/* ヘッダー */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <img 
-              src="/logo.jpg" 
-              alt="ロゴ" 
-              className="w-8 h-8 rounded-lg object-cover shadow-sm border border-gray-100"
-            />
-            <span className="text-lg font-bold tracking-tight text-gray-900">
-              レポート文字数カウンター
-            </span>
+      <header className="bg-white border-b sticky top-0 z-50 shadow-sm">
+        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+          <Link href="/" className="font-bold text-gray-900 hover:opacity-70 transition-opacity flex items-center gap-2">
+            <span>← ツールに戻る</span>
           </Link>
         </div>
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-10">
-        
-        {/* 記事タイトルエリア */}
-        <div className="mb-8">
-            <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">レポートの書き方</span>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
-                【コピペOK】参考文献の書き方完全ガイド！URLや書籍のルールを実例で解説
-            </h1>
-            <p className="text-gray-500 text-sm mt-2">最終更新日: 2025年12月25日</p>
-        </div>
+        <article className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+          
+          <h1 className="text-2xl md:text-3xl font-black mb-6 leading-tight">
+            【コピペOK】参考文献の書き方完全ガイド！<br className="hidden md:block" />URLや書籍のルールを実例で解説
+          </h1>
+          
+          <div className="bg-blue-50 p-4 rounded-xl text-sm text-blue-800 mb-8 border border-blue-100">
+            <strong>💡 この記事でわかること</strong>
+            <ul className="list-disc ml-5 mt-2 space-y-1">
+              <li>本・Webサイト・論文の正しい引用フォーマット</li>
+              <li>「カンマ」と「ピリオド」の使い分け</li>
+              <li>Wordでのぶら下げインデント設定方法</li>
+            </ul>
+          </div>
 
-        {/* 記事本文 */}
-        <article className="bg-white p-6 md:p-10 rounded-xl shadow-sm border border-gray-100 leading-relaxed text-gray-700 space-y-8">
+          {/* 本文エリア */}
+          <div className="prose prose-blue max-w-none">
             
-            {/* 導入 */}
-            <p>
-                「レポートの参考文献、どう書けばいいかわからない...」<br />
-                「URLだけでいいの？著者は？」<br />
-                そんな悩みを持つ大学生のために、<strong>コピペして使える参考文献の書き方テンプレート</strong>をまとめました。<br />
-                正しく書かないと「盗用（コピペ）」とみなされて単位を落とす可能性もあるので、しっかり確認しましょう。
+            <h2 className="text-xl font-bold border-l-4 border-blue-600 pl-3 mb-4 mt-8">1. 基本的な書き方のルール</h2>
+            <p className="mb-4 text-sm leading-relaxed text-gray-600">
+              参考文献リストは、レポートの最後に「著者名の五十音順（アルファベット順）」で並べるのが基本ルールです。
+              文系・理系や大学の指定によってスタイル（SIST02、APA、MLAなど）が異なりますが、ここでは日本の大学レポートで最も一般的な形式を紹介します。
             </p>
 
-            {/* 目次っぽいボックス */}
-            <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
-                <p className="font-bold text-gray-800 mb-2">この記事の内容</p>
-                <ul className="list-disc list-inside space-y-1 text-sm text-blue-600 underline cursor-pointer">
-                    <li><a href="#book">1. 本（書籍）の書き方</a></li>
-                    <li><a href="#web">2. Webサイト（URL）の書き方</a></li>
-                    <li><a href="#tool">3. 面倒な作業を自動化する裏技</a></li>
-                </ul>
+            <h3 className="text-lg font-bold mt-6 mb-3">書籍（本）の場合</h3>
+            <div className="bg-gray-100 p-4 rounded-lg font-mono text-sm mb-4">
+              著者名『書籍タイトル』出版社, 出版年.
+            </div>
+            <p className="text-sm mb-2"><strong>例：</strong></p>
+            <ul className="list-disc ml-5 text-sm mb-4 text-gray-600">
+              <li>山田太郎『レポートの極意』東京大学出版会, 2024.</li>
+              <li>Satoh, Hanako. <i>Academic Writing</i>. Oxford Press, 2023.</li>
+            </ul>
+
+            <h3 className="text-lg font-bold mt-6 mb-3">Webサイトの場合</h3>
+            <div className="bg-gray-100 p-4 rounded-lg font-mono text-sm mb-4">
+              著者名（サイト名）「記事タイトル」URL (参照 年月日)
+            </div>
+            <p className="text-sm mb-2"><strong>例：</strong></p>
+            <ul className="list-disc ml-5 text-sm mb-4 text-gray-600">
+              <li>文部科学省「著作権法について」https://www.mext.go.jp/... (参照 2025年1月15日)</li>
+              <li>Wikipedia「人工知能」https://ja.wikipedia.org/... (参照 2024年12月24日)</li>
+            </ul>
+
+            {/* アフィリエイト・ツール誘導 */}
+            <div className="my-10 p-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl text-white text-center shadow-lg">
+              <p className="font-bold text-lg mb-2">😩 手入力が面倒くさいですか？</p>
+              <p className="text-sm opacity-90 mb-4">当サイトのツールなら、URLを貼るだけで自動でフォーマットを作成できます。</p>
+              <Link href="/" className="inline-block bg-white text-blue-700 font-bold py-3 px-8 rounded-full shadow-md hover:bg-yellow-50 transition-colors">
+                今すぐツールで自動作成する ⚡
+              </Link>
             </div>
 
-            {/* セクション1 */}
-            <section id="book">
-                <h2 className="text-xl font-bold text-gray-900 border-l-4 border-blue-500 pl-3 mb-4">1. 本（書籍）の書き方</h2>
-                <p className="mb-4">
-                    書籍を参考にした場合、以下の順序で書くのが一般的です。
-                </p>
-                <div className="bg-yellow-50 p-4 rounded border border-yellow-200 font-mono text-sm mb-4">
-                    著者名『書籍のタイトル』, 出版社, 出版年.
-                </div>
-                <p className="font-bold mb-1">実例：</p>
-                <p className="bg-gray-100 p-2 rounded text-sm">
-                    山田 太郎『レポートの書き方入門』, 学術出版, 2024.
-                </p>
-            </section>
+            <h2 className="text-xl font-bold border-l-4 border-blue-600 pl-3 mb-4 mt-8">2. よくあるNG例</h2>
+            <ul className="space-y-3 text-sm text-gray-600">
+              <li className="flex gap-2">
+                <span className="text-red-500 font-bold">×</span>
+                <span><strong>URLだけ貼る：</strong> リンク切れのリスクがあるため、必ず「タイトル」と「参照日」を併記しましょう。</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-red-500 font-bold">×</span>
+                <span><strong>リストの順番がバラバラ：</strong> 登場順ではなく、著者名の「あいうえお順」で並べるのが一般的です。</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="text-red-500 font-bold">×</span>
+                <span><strong>Wikipediaを多用する：</strong> 厳密な論文ではNGとされることが多いです。一次情報（政府の統計など）を探しましょう。</span>
+              </li>
+            </ul>
 
-            {/* セクション2 */}
-            <section id="web">
-                <h2 className="text-xl font-bold text-gray-900 border-l-4 border-blue-500 pl-3 mb-4">2. Webサイト（URL）の書き方</h2>
-                <p className="mb-4">
-                    ネットの記事を参考にした場合、URLだけでなく「いつ見たか（参照日）」を書くのがルールです。
-                </p>
-                <div className="bg-yellow-50 p-4 rounded border border-yellow-200 font-mono text-sm mb-4">
-                    著者名（またはサイト名）, "記事タイトル", URL (参照 年月日)
-                </div>
-                <p className="font-bold mb-1">実例：</p>
-                <p className="bg-gray-100 p-2 rounded text-sm mb-4">
-                    文部科学省, "著作権法について", https://www.mext.go.jp/ (参照 2025年12月25日)
-                </p>
-                <p className="text-sm text-red-600">
-                    ※Wikipediaは信頼性が低いため、大学のレポートでは参考文献として認められないことが多いので注意しましょう。
-                </p>
-            </section>
+            <h2 className="text-xl font-bold border-l-4 border-blue-600 pl-3 mb-4 mt-8">3. レポート作成のおすすめアイテム</h2>
+            <p className="mb-4 text-sm text-gray-600">
+              参考文献の書き方で迷ったら、手元に一冊ガイド本があると安心です。特に以下の2冊は大学生の定番です。
+            </p>
 
-            {/* セクション3（ツールへの誘導） */}
-            <section id="tool" className="bg-blue-50 p-6 rounded-xl border border-blue-100">
-                <h2 className="text-lg font-bold text-blue-900 mb-2">3. 面倒な作業を自動化する裏技</h2>
-                <p className="mb-4 text-sm">
-                    「著者名を調べて、コンマを打って...」という作業、正直面倒くさいですよね。<br />
-                    当サイトの<strong>「参考文献メーカー」</strong>を使えば、タイトルやURLを入力するだけで、正しい形式を自動生成できます。
-                </p>
-                
-                <div className="text-center mt-6">
-                    <Link href="/" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-md transition-transform hover:scale-105">
-                        👉 今すぐツールを使って作成する
-                    </Link>
-                    <p className="text-xs text-gray-500 mt-2">※完全無料で登録不要です</p>
-                </div>
-            </section>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <div className="border rounded-xl p-4 flex flex-col items-center text-center">
+                <h4 className="font-bold text-sm mb-2">論文の教室</h4>
+                <a href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline hover:text-blue-800">
+                  Amazonで見る ↗
+                </a>
+              </div>
+              <div className="border rounded-xl p-4 flex flex-col items-center text-center">
+                <h4 className="font-bold text-sm mb-2">コピペと言われないレポートの書き方</h4>
+                <a href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 underline hover:text-blue-800">
+                  Amazonで見る ↗
+                </a>
+              </div>
+            </div>
 
+          </div>
         </article>
+
+        {/* 記事下のアクション */}
+        <div className="mt-8 text-center">
+          <Link href="/" className="inline-flex items-center justify-center gap-2 text-blue-600 font-bold hover:underline">
+            <span>← 文字数カウンタートップへ戻る</span>
+          </Link>
+        </div>
+
       </main>
 
-      <footer className="max-w-4xl mx-auto px-4 mt-12 mb-8 text-center text-gray-400 text-sm">
-        <Link href="/" className="hover:text-gray-600">トップページに戻る</Link>
-        <p className="mt-4">&copy; 2025 Acky</p>
+      <footer className="max-w-3xl mx-auto px-4 py-8 text-center text-gray-400 text-xs">
+        <p>&copy; 2025 Acky</p>
       </footer>
     </div>
   );
