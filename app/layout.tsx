@@ -13,11 +13,11 @@ export const metadata: Metadata = {
     shortcut: '/logo.jpg',
     apple: '/logo.jpg',
   },
-  // 👇 Search Consoleの確認コード
+  // 👇 Search Consoleの確認コード（そのままでOK）
   verification: {
     google: 'SyqUrfgc1zTfMYdiIE8IX6T46WQ_785iDjCbPkuoIzk', 
   },
-  // 👇【追加】AdSenseの所有権確認コード（これで確実に合格します）
+  // 👇【重要】AdSenseの所有権確認用タグ（これがあると審査に通りやすくなります）
   other: {
     'google-adsense-account': 'ca-pub-4656581903403841',
   },
@@ -36,7 +36,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="レポカン" />
         <meta name="theme-color" content="#ffffff" />
         
-        {/* AdSense本体のスクリプト */}
+        {/* 👇 AdSense本体のコード（ここに入っていれば全ページで有効になります） */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4656581903403841"
