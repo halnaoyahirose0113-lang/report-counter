@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
   // 👇 ここにサーチコンソールのコード（contentの中身）を入れてください！
   verification: {
-    google: 'ここにサーチコンソールのコードを貼り付け', 
+    google: 'SyqUrfgc1zTfMYdiIE8IX6T46WQ_785iDjCbPkuoIzk', 
   },
 }
 
