@@ -13,11 +13,16 @@ export default function Home() {
   const [isSaved, setIsSaved] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  // 新機能用ステート
+  // 新機能: ダークモード
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // 新機能: 文体チェッカー
+  const [showStyleCheck, setShowStyleCheck] = useState(false);
+  const [styleCheckResult, setStyleCheckResult] = useState<{__html: string} | null>(null);
+
+  // 以前の機能
   const [targetCount, setTargetCount] = useState(2000); 
   const [progress, setProgress] = useState(0);
-
-  // 締め切りタイマー用
   const [deadline, setDeadline] = useState('');
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0 });
 
@@ -35,9 +40,12 @@ export default function Home() {
     const savedText = localStorage.getItem('report-text');
     const savedDeadline = localStorage.getItem('report-deadline');
     const savedTarget = localStorage.getItem('report-target');
+    const savedTheme = localStorage.getItem('report-theme'); // テーマ保存
+    
     if (savedText) setText(savedText);
     if (savedDeadline) setDeadline(savedDeadline);
     if (savedTarget) setTargetCount(Number(savedTarget));
+    if (savedTheme === 'dark') setIsDarkMode(true);
   }, []);
 
   useEffect(() => {
@@ -49,7 +57,8 @@ export default function Home() {
     }
     if (deadline) localStorage.setItem('report-deadline', deadline);
     if (targetCount) localStorage.setItem('report-target', targetCount.toString());
-  }, [text, deadline, targetCount]);
+    localStorage.setItem('report-theme', isDarkMode ? 'dark' : 'light');
+  }, [text, deadline, targetCount, isDarkMode]);
 
   // --- タイマー計算ロジック ---
   useEffect(() => {
@@ -82,7 +91,6 @@ export default function Home() {
     const countWithoutSpaces = processedText.replace(/\s/g, '').length;
     const lines = processedText ? processedText.split(/\r\n|\r|\n/).length : 0;
     
-    // プログレスバーの計算
     const currentCount = excludeReferences ? countWithoutSpaces : countWithSpaces;
     let calcProgress = (currentCount / (targetCount || 1)) * 100;
     if (calcProgress > 100) calcProgress = 100;
@@ -121,6 +129,20 @@ export default function Home() {
     setText(skeleton);
   };
 
+  // 🔍 文体チェック（です・ます調を検出）
+  const handleStyleCheck = () => {
+    if (!text) return;
+    
+    // 「です・ます」などを赤くハイライトするHTMLを作成
+    let checkedHTML = text
+        .replace(/\n/g, '<br/>') // 改行を維持
+        .replace(/(です|ます|でした|ました|ません|ましょう)(。|、| |$|<)/g, 
+            '<span class="bg-red-200 text-red-800 font-bold px-1 rounded mx-0.5 border border-red-300 shadow-sm">$1</span>$2');
+
+    setStyleCheckResult({ __html: checkedHTML });
+    setShowStyleCheck(true);
+  };
+
   const handleAutoFill = async () => {
     if (!refData.url) {
         alert("URLを入力してください");
@@ -132,10 +154,6 @@ export default function Home() {
         const urlObj = new URL(refData.url);
         let siteName = urlObj.hostname.replace('www.', '').split('.')[0];
         if (refData.url.includes('wikipedia.org')) siteName = "Wikipedia";
-        if (refData.url.includes('nikkei.com')) siteName = "日本経済新聞";
-        if (refData.url.includes('asahi.com')) siteName = "朝日新聞デジタル";
-        if (refData.url.includes('gov.jp')) siteName = "公的機関/統計";
-
         setRefData({
           ...refData,
           title: "（解析完了：記事タイトルを入力）",
@@ -156,22 +174,41 @@ export default function Home() {
     setGeneratedRef(result);
   };
 
+  // 🎨 テーマに応じたクラス定義
+  const theme = {
+    bg: isDarkMode ? 'bg-gray-900' : 'bg-gray-50',
+    text: isDarkMode ? 'text-gray-100' : 'text-gray-800',
+    card: isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100',
+    cardText: isDarkMode ? 'text-gray-200' : 'text-gray-700',
+    subText: isDarkMode ? 'text-gray-400' : 'text-gray-500',
+    input: isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-800',
+    header: isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
+    textarea: isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-700',
+    stats: isDarkMode ? 'bg-gray-950 border-gray-700' : 'bg-gray-50 border-gray-200',
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans pb-20">
+    <div className={`min-h-screen font-sans pb-20 transition-colors duration-300 ${theme.bg} ${theme.text}`}>
       
-      {/* ヘッダー：レポカン仕様に変更 */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+      {/* ヘッダー */}
+      <header className={`sticky top-0 z-50 shadow-sm transition-colors duration-300 border-b ${theme.header}`}>
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img src="/logo.jpg" alt="レポカンロゴ" className="w-9 h-9 rounded-xl object-cover shadow-sm border border-gray-100" />
             <div className="flex flex-col justify-center">
-                <h1 className="text-xl font-black text-gray-900 tracking-tight leading-none">レポカン</h1>
-                <span className="text-[9px] text-gray-500 font-bold">レポート文字数カウンター</span>
+                <h1 className={`text-xl font-black tracking-tight leading-none ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>レポカン</h1>
+                <span className={`text-[9px] font-bold ${theme.subText}`}>レポート文字数カウンター</span>
             </div>
           </div>
           <nav className="flex items-center gap-3">
-             <Link href="/blog/report-structure" className="text-[10px] sm:text-sm font-bold text-blue-600 border border-blue-200 bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors">構成テンプレ</Link>
-             <div className={`hidden sm:block text-xs font-medium transition-opacity duration-500 ${isSaved ? 'text-green-600 opacity-100' : 'opacity-0'}`}>✓ 保存済</div>
+             {/* 🌙 ダークモード切替ボタン */}
+             <button 
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`p-2 rounded-full transition-all ${isDarkMode ? 'bg-yellow-400 text-gray-900' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
+             >
+                {isDarkMode ? '☀️' : '🌙'}
+             </button>
+             <Link href="/blog/report-structure" className="hidden sm:block text-[10px] sm:text-sm font-bold text-blue-600 border border-blue-200 bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors">構成テンプレ</Link>
           </nav>
         </div>
       </header>
@@ -179,7 +216,7 @@ export default function Home() {
       <main className="max-w-4xl mx-auto px-4 mt-4 space-y-6">
 
         {/* ⏳ 締め切りタイマー */}
-        <div className="bg-gray-900 rounded-2xl p-4 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="bg-gray-900 rounded-2xl p-4 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-gray-700">
           <div className="flex flex-col gap-1 w-full sm:w-auto text-center sm:text-left">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">提出期限まで残り</span>
             <div className="flex items-baseline justify-center sm:justify-start gap-2">
@@ -200,22 +237,22 @@ export default function Home() {
         </div>
         
         {/* 📈 目標達成プログレスバー */}
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+        <div className={`rounded-2xl p-4 shadow-sm border ${theme.card}`}>
             <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-bold text-gray-700 flex items-center gap-2">
+                <label className={`text-xs font-bold flex items-center gap-2 ${theme.cardText}`}>
                     🎯 目標文字数:
                     <input 
                         type="number" 
                         value={targetCount} 
                         onChange={(e) => setTargetCount(Number(e.target.value))}
-                        className="border border-gray-300 rounded px-2 py-1 text-sm w-20 text-right font-black text-blue-600 focus:outline-none focus:border-blue-500"
+                        className={`border rounded px-2 py-1 text-sm w-20 text-right font-black text-blue-600 focus:outline-none focus:border-blue-500 ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
                     />
                 </label>
-                <span className="text-xs font-bold text-gray-500">
+                <span className={`text-xs font-bold ${theme.subText}`}>
                     現在: <span className="text-blue-600 tabular-nums">{stats.currentCount}</span> / {targetCount}
                 </span>
             </div>
-            <div className="h-4 bg-gray-100 rounded-full overflow-hidden relative shadow-inner">
+            <div className={`h-4 rounded-full overflow-hidden relative shadow-inner ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
                 <div 
                     className={`h-full transition-all duration-500 ease-out rounded-full ${progress >= 100 ? 'bg-gradient-to-r from-green-400 to-green-500' : 'bg-gradient-to-r from-blue-400 to-blue-600'}`}
                     style={{ width: `${progress}%` }}
@@ -229,19 +266,41 @@ export default function Home() {
             </div>
         </div>
 
+        {/* 🔍 文体チェック結果表示エリア（表示時のみ） */}
+        {showStyleCheck && styleCheckResult && (
+            <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-5 animate-in fade-in slide-in-from-top-4 shadow-lg">
+                <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-bold text-red-800 flex items-center gap-2">
+                        ⚠️ 文体チェック結果
+                    </h3>
+                    <button onClick={() => setShowStyleCheck(false)} className="text-xs bg-red-100 text-red-600 px-3 py-1 rounded-full font-bold hover:bg-red-200">閉じる</button>
+                </div>
+                <div 
+                    className="text-sm leading-relaxed text-gray-800 bg-white p-4 rounded-xl border border-red-100 max-h-60 overflow-y-auto"
+                    dangerouslySetInnerHTML={styleCheckResult}
+                />
+                <p className="text-[10px] text-red-500 mt-2 font-bold text-center">
+                    ※ 赤くなっている「です・ます」部分を「だ・である」に直しましょう！
+                </p>
+            </div>
+        )}
+
         {/* メインエディタ & カウンター */}
-        <section className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
-          <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between overflow-x-auto">
+        <section className={`rounded-2xl shadow-sm border overflow-hidden relative ${theme.card}`}>
+          <div className={`px-4 py-2 border-b flex items-center justify-between overflow-x-auto ${theme.stats} ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
             <div className="flex gap-2 shrink-0">
-                {/* 🦴 骨組み召喚ボタン */}
                 <button onClick={handleInsertSkeleton} className="text-[10px] bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded font-bold shadow-sm transition-colors flex items-center gap-1">
-                    <span>🦴</span>テンプレ召喚
+                    <span>🦴</span>テンプレ
                 </button>
-                <button onClick={handleCopyText} className="text-[10px] bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 px-3 py-1 rounded font-bold shadow-sm transition-colors">コピー</button>
-                <button onClick={handleClearText} className="text-[10px] bg-white border border-gray-300 hover:text-red-600 text-gray-400 px-3 py-1 rounded shadow-sm transition-colors">クリア</button>
+                {/* 🔍 文体チェックボタン */}
+                <button onClick={handleStyleCheck} className="text-[10px] bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 px-3 py-1 rounded font-bold shadow-sm transition-colors flex items-center gap-1">
+                    <span>🔍</span>文体チェック
+                </button>
+                <button onClick={handleCopyText} className={`text-[10px] border px-3 py-1 rounded font-bold shadow-sm transition-colors ${isDarkMode ? 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-100'}`}>コピー</button>
+                <button onClick={handleClearText} className={`text-[10px] border px-3 py-1 rounded shadow-sm transition-colors ${isDarkMode ? 'bg-gray-700 border-gray-600 text-gray-400 hover:text-red-400' : 'bg-white border-gray-300 text-gray-400 hover:text-red-600'}`}>クリア</button>
             </div>
             <label className="flex items-center cursor-pointer select-none ml-4 shrink-0">
-              <span className="mr-2 text-[10px] font-bold text-gray-500 uppercase">参考文献を除外</span>
+              <span className={`mr-2 text-[10px] font-bold uppercase ${theme.subText}`}>参考文献を除外</span>
               <div className="relative">
                 <input type="checkbox" className="sr-only" checked={excludeReferences} onChange={(e) => setExcludeReferences(e.target.checked)} />
                 <div className={`block w-8 h-5 rounded-full transition-colors ${excludeReferences ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
@@ -250,7 +309,7 @@ export default function Home() {
             </label>
           </div>
           <textarea
-            className="w-full h-[45vh] p-4 text-base leading-relaxed text-gray-700 focus:outline-none resize-none font-mono"
+            className={`w-full h-[45vh] p-4 text-base leading-relaxed focus:outline-none resize-none font-mono transition-colors duration-300 ${theme.textarea}`}
             placeholder="ここに文章を入力してください...（自動保存されます）"
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -276,51 +335,50 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <p className="text-[9px] text-gray-400 mt-3 text-center">※文字数が足りない時や、文章を賢く見せたい時に使ってください。</p>
         </section>
 
         {/* 📚 参考文献メーカー */}
-        <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+        <section className={`rounded-xl shadow-sm border p-5 ${theme.card}`}>
           <div className="flex items-center justify-between mb-3">
-             <h2 className="text-sm font-bold text-gray-800 flex items-center gap-2">📚 参考文献メーカー</h2>
+             <h2 className={`text-sm font-bold flex items-center gap-2 ${theme.cardText}`}>📚 参考文献メーカー</h2>
              <span className="text-[9px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-bold">時短機能付</span>
           </div>
           <div className="space-y-3">
             <div className="flex gap-2">
-              <input type="text" placeholder="URLを貼って自動入力" className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm outline-none bg-blue-50/30" value={refData.url} onChange={(e) => setRefData({...refData, url: e.target.value})} />
+              <input type="text" placeholder="URLを貼って自動入力" className={`flex-1 border rounded px-3 py-2 text-sm outline-none ${theme.input}`} value={refData.url} onChange={(e) => setRefData({...refData, url: e.target.value})} />
               <button onClick={handleAutoFill} disabled={isAnalyzing} className="bg-blue-600 text-white text-[10px] font-bold px-4 py-2 rounded shadow-sm hover:bg-blue-700 transition-colors">{isAnalyzing ? "解析中" : "⚡自動入力"}</button>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <input type="text" placeholder="タイトル" className="border border-gray-300 rounded px-3 py-2 text-xs outline-none" value={refData.title} onChange={(e) => setRefData({...refData, title: e.target.value})} />
-              <input type="text" placeholder="著者/サイト名" className="border border-gray-300 rounded px-3 py-2 text-xs outline-none" value={refData.author} onChange={(e) => setRefData({...refData, author: e.target.value})} />
+              <input type="text" placeholder="タイトル" className={`border rounded px-3 py-2 text-xs outline-none ${theme.input}`} value={refData.title} onChange={(e) => setRefData({...refData, title: e.target.value})} />
+              <input type="text" placeholder="著者/サイト名" className={`border rounded px-3 py-2 text-xs outline-none ${theme.input}`} value={refData.author} onChange={(e) => setRefData({...refData, author: e.target.value})} />
             </div>
-            <button onClick={handleGenerateRef} className="w-full bg-gray-800 text-white text-sm font-bold py-2.5 rounded hover:bg-gray-900 transition-colors">書式を作成</button>
+            <button onClick={handleGenerateRef} className={`w-full text-white text-sm font-bold py-2.5 rounded transition-colors ${isDarkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-800 hover:bg-gray-900'}`}>書式を作成</button>
           </div>
           {generatedRef && (
-            <div className="mt-3 p-3 bg-gray-50 border border-dashed border-gray-300 rounded text-[11px] flex justify-between items-center">
-              <code className="text-gray-700 truncate mr-4">{generatedRef}</code>
-              <button onClick={() => navigator.clipboard.writeText(generatedRef)} className="text-blue-600 font-bold shrink-0 hover:underline">コピー</button>
+            <div className={`mt-3 p-3 border border-dashed rounded text-[11px] flex justify-between items-center ${isDarkMode ? 'bg-gray-700 border-gray-600 text-gray-200' : 'bg-gray-50 border-gray-300 text-gray-700'}`}>
+              <code className="truncate mr-4">{generatedRef}</code>
+              <button onClick={() => navigator.clipboard.writeText(generatedRef)} className="text-blue-500 font-bold shrink-0 hover:underline">コピー</button>
             </div>
           )}
         </section>
 
         {/* 📖 神アイテムコーナー */}
         <section className="mt-10">
-          <h3 className="text-base font-bold text-gray-800 mb-5 flex items-center gap-2">
+          <h3 className={`text-base font-bold mb-5 flex items-center gap-2 ${theme.cardText}`}>
             📖 レポート作成に役立つ神アイテム
           </h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all">
+            <div className={`p-4 rounded-2xl border shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all ${theme.card}`}>
               <img src="https://images-na.ssl-images-amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg" alt="最新版 論文の教室" className="w-16 h-24 object-cover mb-3 rounded shadow-sm" />
-              <h4 className="font-bold text-gray-800 text-[11px] h-8 flex items-center leading-tight">最新版 論文の教室</h4>
+              <h4 className={`font-bold text-[11px] h-8 flex items-center leading-tight ${theme.cardText}`}>最新版 論文の教室</h4>
               <div className="flex w-full gap-1 mt-auto">
                 <a href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#FF9900] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">Amazon</a>
                 <a href="https://a.r10.to/hkR3I2" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#BF0000] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">楽天</a>
               </div>
             </div>
-            <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all">
+            <div className={`p-4 rounded-2xl border shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all ${theme.card}`}>
               <img src="https://images-na.ssl-images-amazon.com/images/P/B077RWQNKN.09.LZZZZZZZ.jpg" alt="コピペと言われないレポート" className="w-16 h-24 object-cover mb-3 rounded shadow-sm" />
-              <h4 className="font-bold text-gray-800 text-[11px] h-8 flex items-center leading-tight">コピペと言われない書き方</h4>
+              <h4 className={`font-bold text-[11px] h-8 flex items-center leading-tight ${theme.cardText}`}>コピペと言われない書き方</h4>
               <div className="flex w-full gap-1 mt-auto">
                 <a href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#FF9900] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">Amazon</a>
                 <a href="https://a.r10.to/h5fKiw" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#BF0000] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">楽天</a>
@@ -331,21 +389,21 @@ export default function Home() {
 
         {/* 💻 ガジェットコーナー */}
         <section className="mt-10">
-          <h3 className="text-base font-bold text-gray-800 mb-5 flex items-center gap-2">
+          <h3 className={`text-base font-bold mb-5 flex items-center gap-2 ${theme.cardText}`}>
             💻 執筆が爆速になる神ガジェット
           </h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all">
+            <div className={`p-4 rounded-2xl border shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all ${theme.card}`}>
               <img src="https://m.media-amazon.com/images/I/61SD-+LxQQL._AC_SX425_.jpg" alt="PCスタンド" className="w-16 h-16 object-contain mb-3 mt-4" />
-              <h4 className="font-bold text-gray-800 text-[11px] h-8 flex items-center leading-tight">BoYata PCスタンド</h4>
+              <h4 className={`font-bold text-[11px] h-8 flex items-center leading-tight ${theme.cardText}`}>BoYata PCスタンド</h4>
               <div className="flex w-full gap-1 mt-auto">
                 <a href="https://www.amazon.co.jp/dp/B07H774Q42?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#FF9900] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">Amazon</a>
                 <a href="https://a.r10.to/h5n0fy" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#BF0000] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">楽天</a>
               </div>
             </div>
-            <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all">
+            <div className={`p-4 rounded-2xl border shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all ${theme.card}`}>
               <img src="https://m.media-amazon.com/images/I/61spsKphurL._AC_SX679_.jpg" alt="ブルーライトカットメガネ" className="w-16 h-16 object-contain mb-3 mt-4" />
-              <h4 className="font-bold text-gray-800 text-[11px] h-8 flex items-center leading-tight">ブルーライトカットメガネ</h4>
+              <h4 className={`font-bold text-[11px] h-8 flex items-center leading-tight ${theme.cardText}`}>ブルーライトカットメガネ</h4>
               <div className="flex w-full gap-1 mt-auto">
                 <a href="https://www.amazon.co.jp/dp/B0FRZG38TW?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#FF9900] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">Amazon</a>
                 <a href="https://a.r10.to/hP5chl" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#BF0000] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">楽天</a>
@@ -364,45 +422,41 @@ export default function Home() {
 
         {/* 📝 記事リンクコーナー */}
         <section className="mt-8">
-          <h3 className="text-sm font-bold text-gray-800 mb-3 ml-1">📝 人気の解説記事</h3>
+          <h3 className={`text-sm font-bold mb-3 ml-1 ${theme.cardText}`}>📝 人気の解説記事</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            
             {/* 記事1 */}
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
+            <div className={`p-4 rounded-xl border shadow-sm hover:shadow-md transition-all ${theme.card}`}>
               <Link href="/blog/citation-rules" className="block group h-full flex flex-col">
                 <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
                   【コピペOK】参考文献の書き方完全ガイド
                 </h4>
-                <p className="text-[10px] text-gray-500 mt-auto">
+                <p className={`text-[10px] mt-auto ${theme.subText}`}>
                   本やWebサイトを引用するときの正しい書き方。
                 </p>
               </Link>
             </div>
-
             {/* 記事2 */}
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
+            <div className={`p-4 rounded-xl border shadow-sm hover:shadow-md transition-all ${theme.card}`}>
               <Link href="/blog/word-count-hacks" className="block group h-full flex flex-col">
                 <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
                   レポートの文字数が足りない！自然に増やす裏技
                 </h4>
-                <p className="text-[10px] text-gray-500 mt-auto">
+                <p className={`text-[10px] mt-auto ${theme.subText}`}>
                   質を落とさずに文字数を増やすテクニック5選。
                 </p>
               </Link>
             </div>
-
             {/* 記事3 */}
-            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
+            <div className={`p-4 rounded-xl border shadow-sm hover:shadow-md transition-all ${theme.card}`}>
               <Link href="/blog/report-structure" className="block group h-full flex flex-col">
                 <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
                   【テンプレ】序論・本論・結論の書き方
                 </h4>
-                <p className="text-[10px] text-gray-500 mt-auto">
+                <p className={`text-[10px] mt-auto ${theme.subText}`}>
                   レポート構成の黄金比率と書き出しの例文。
                 </p>
               </Link>
             </div>
-
           </div>
         </section>
 
