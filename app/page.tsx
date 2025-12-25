@@ -13,6 +13,10 @@ export default function Home() {
   const [isSaved, setIsSaved] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
+  // 新機能用ステート
+  const [targetCount, setTargetCount] = useState(2000); // 目標文字数（初期値2000）
+  const [progress, setProgress] = useState(0);
+
   // 締め切りタイマー用
   const [deadline, setDeadline] = useState('');
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0 });
@@ -30,8 +34,10 @@ export default function Home() {
   useEffect(() => {
     const savedText = localStorage.getItem('report-text');
     const savedDeadline = localStorage.getItem('report-deadline');
+    const savedTarget = localStorage.getItem('report-target'); // 目標も保存
     if (savedText) setText(savedText);
     if (savedDeadline) setDeadline(savedDeadline);
+    if (savedTarget) setTargetCount(Number(savedTarget));
   }, []);
 
   useEffect(() => {
@@ -42,7 +48,8 @@ export default function Home() {
         return () => clearTimeout(timer);
     }
     if (deadline) localStorage.setItem('report-deadline', deadline);
-  }, [text, deadline]);
+    if (targetCount) localStorage.setItem('report-target', targetCount.toString());
+  }, [text, deadline, targetCount]);
 
   // --- タイマー計算ロジック ---
   useEffect(() => {
@@ -62,6 +69,28 @@ export default function Home() {
     return () => clearInterval(timer);
   }, [deadline]);
 
+  // --- 文字数計算 & プログレスバー計算 ---
+  const stats = useMemo(() => {
+    let processedText = text;
+    if (excludeReferences) {
+      const splitRegex = /\n(参考文献|References|引用文献)/i;
+      const parts = processedText.split(splitRegex);
+      if (parts.length > 1) processedText = parts[0]; 
+      processedText = processedText.replace(/\[\d+\]/g, '');
+    }
+    const countWithSpaces = processedText.length;
+    const countWithoutSpaces = processedText.replace(/\s/g, '').length;
+    const lines = processedText ? processedText.split(/\r\n|\r|\n/).length : 0;
+    
+    // プログレスバーの計算
+    const currentCount = excludeReferences ? countWithoutSpaces : countWithSpaces;
+    let calcProgress = (currentCount / (targetCount || 1)) * 100;
+    if (calcProgress > 100) calcProgress = 100;
+    setProgress(calcProgress);
+
+    return { countWithSpaces, countWithoutSpaces, lines, currentCount };
+  }, [text, excludeReferences, targetCount]);
+
   // --- ハンドラー ---
   const handleCopyText = () => {
     if (!text) return;
@@ -76,19 +105,22 @@ export default function Home() {
     }
   };
 
-  const stats = useMemo(() => {
-    let processedText = text;
-    if (excludeReferences) {
-      const splitRegex = /\n(参考文献|References|引用文献)/i;
-      const parts = processedText.split(splitRegex);
-      if (parts.length > 1) processedText = parts[0]; 
-      processedText = processedText.replace(/\[\d+\]/g, '');
+  // 🦴 骨組み召喚ハンドラー
+  const handleInsertSkeleton = () => {
+    if (text && !confirm('現在入力されている文章が上書きされますが、よろしいですか？')) {
+        return;
     }
-    const countWithSpaces = processedText.length;
-    const countWithoutSpaces = processedText.replace(/\s/g, '').length;
-    const lines = processedText ? processedText.split(/\r\n|\r|\n/).length : 0;
-    return { countWithSpaces, countWithoutSpaces, lines };
-  }, [text, excludeReferences]);
+    const skeleton = `【序論】
+（ここに、このレポートで明らかにしたい問いや目的を書く。約10%）
+
+【本論】
+（ここに、具体的な事実、データ、考察を書く。必要に応じて段落を分ける。約80%）
+
+【結論】
+（ここに、序論の問いに対する答えと、今後の課題を書く。約10%）
+`;
+    setText(skeleton);
+  };
 
   const handleAutoFill = async () => {
     if (!refData.url) {
@@ -96,7 +128,7 @@ export default function Home() {
         return;
     }
     setIsAnalyzing(true);
-    // 擬似AI解析（サーバー負荷なし）
+    // 擬似AI解析
     setTimeout(() => {
       try {
         const urlObj = new URL(refData.url);
@@ -137,7 +169,7 @@ export default function Home() {
             <h1 className="text-base font-bold text-gray-900 sm:text-xl text-nowrap">レポート文字数カウンター</h1>
           </div>
           <nav className="flex items-center gap-3">
-             <Link href="/blog/citation-rules" className="text-[10px] sm:text-sm font-bold text-blue-600 border border-blue-200 bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors">書き方ガイド</Link>
+             <Link href="/blog/report-structure" className="text-[10px] sm:text-sm font-bold text-blue-600 border border-blue-200 bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors">構成テンプレ</Link>
              <div className={`hidden sm:block text-xs font-medium transition-opacity duration-500 ${isSaved ? 'text-green-600 opacity-100' : 'opacity-0'}`}>✓ 保存済</div>
           </nav>
         </div>
@@ -166,14 +198,48 @@ export default function Home() {
           </div>
         </div>
         
+        {/* 📈 目標達成プログレスバー（新機能） */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-bold text-gray-700 flex items-center gap-2">
+                    🎯 目標文字数:
+                    <input 
+                        type="number" 
+                        value={targetCount} 
+                        onChange={(e) => setTargetCount(Number(e.target.value))}
+                        className="border border-gray-300 rounded px-2 py-1 text-sm w-20 text-right font-black text-blue-600 focus:outline-none focus:border-blue-500"
+                    />
+                </label>
+                <span className="text-xs font-bold text-gray-500">
+                    現在: <span className="text-blue-600 tabular-nums">{stats.currentCount}</span> / {targetCount}
+                </span>
+            </div>
+            <div className="h-4 bg-gray-100 rounded-full overflow-hidden relative shadow-inner">
+                <div 
+                    className={`h-full transition-all duration-500 ease-out rounded-full ${progress >= 100 ? 'bg-gradient-to-r from-green-400 to-green-500' : 'bg-gradient-to-r from-blue-400 to-blue-600'}`}
+                    style={{ width: `${progress}%` }}
+                >
+                    {progress >= 100 && (
+                         <div className="absolute inset-0 flex items-center justify-center text-[10px] font-black text-white animate-pulse">
+                             🎉 目標達成！お疲れ様！
+                         </div>
+                    )}
+                </div>
+            </div>
+        </div>
+
         {/* メインエディタ & カウンター */}
         <section className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
-          <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
-            <div className="flex gap-2">
+          <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between overflow-x-auto">
+            <div className="flex gap-2 shrink-0">
+                {/* 🦴 骨組み召喚ボタン（新機能） */}
+                <button onClick={handleInsertSkeleton} className="text-[10px] bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded font-bold shadow-sm transition-colors flex items-center gap-1">
+                    <span>🦴</span>テンプレ召喚
+                </button>
                 <button onClick={handleCopyText} className="text-[10px] bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 px-3 py-1 rounded font-bold shadow-sm transition-colors">コピー</button>
                 <button onClick={handleClearText} className="text-[10px] bg-white border border-gray-300 hover:text-red-600 text-gray-400 px-3 py-1 rounded shadow-sm transition-colors">クリア</button>
             </div>
-            <label className="flex items-center cursor-pointer select-none">
+            <label className="flex items-center cursor-pointer select-none ml-4 shrink-0">
               <span className="mr-2 text-[10px] font-bold text-gray-500 uppercase">参考文献を除外</span>
               <div className="relative">
                 <input type="checkbox" className="sr-only" checked={excludeReferences} onChange={(e) => setExcludeReferences(e.target.checked)} />
@@ -183,7 +249,7 @@ export default function Home() {
             </label>
           </div>
           <textarea
-            className="w-full h-[45vh] p-4 text-base leading-relaxed text-gray-700 focus:outline-none resize-none"
+            className="w-full h-[45vh] p-4 text-base leading-relaxed text-gray-700 focus:outline-none resize-none font-mono"
             placeholder="ここに文章を入力してください...（自動保存されます）"
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -295,19 +361,19 @@ export default function Home() {
           </a>
         </div>
 
-        {/* 📝 記事リンクコーナー (更新：2記事対応) */}
+        {/* 📝 記事リンクコーナー (3記事版) */}
         <section className="mt-8">
           <h3 className="text-sm font-bold text-gray-800 mb-3 ml-1">📝 人気の解説記事</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             
             {/* 記事1: 参考文献 */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
               <Link href="/blog/citation-rules" className="block group h-full flex flex-col">
-                <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-sm leading-relaxed">
-                  【コピペOK】参考文献の書き方完全ガイド！URLや書籍のルール
+                <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
+                  【コピペOK】参考文献の書き方完全ガイド
                 </h4>
                 <p className="text-[10px] text-gray-500 mt-auto">
-                  本やWebサイトを引用するときの正しい書き方を実例で解説。
+                  本やWebサイトを引用するときの正しい書き方。
                 </p>
               </Link>
             </div>
@@ -315,15 +381,16 @@ export default function Home() {
             {/* 記事2: 文字数稼ぎ */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
               <Link href="/blog/word-count-hacks" className="block group h-full flex flex-col">
-                <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-sm leading-relaxed">
-                  レポートの文字数が足りない！自然に増やす「裏技」5選
+                <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
+                  レポートの文字数が足りない！自然に増やす裏技
                 </h4>
                 <p className="text-[10px] text-gray-500 mt-auto">
-                  「あと500文字...」そんな時に使える、質を落とさずに文字数を増やすテクニック。
+                  質を落とさずに文字数を増やすテクニック5選。
                 </p>
               </Link>
             </div>
-            {/* 記事3: 構成（NEW!） */}
+
+            {/* 記事3: 構成 */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
               <Link href="/blog/report-structure" className="block group h-full flex flex-col">
                 <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
