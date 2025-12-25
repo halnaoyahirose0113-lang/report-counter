@@ -6,18 +6,19 @@ export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
       
-      {/* ヘッダー（シンプル版） */}
+      {/* ヘッダー（トップページとデザイン統一） */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <img 
-              src="/logo.jpg" // ※画像ファイル名が logo.png の場合は書き換えてください
-              alt="ロゴ" 
-              className="w-8 h-8 rounded-lg object-cover shadow-sm border border-gray-100"
+              src="/logo.jpg" 
+              alt="レポカンロゴ" 
+              className="w-9 h-9 rounded-xl object-cover shadow-sm border border-gray-100"
             />
-            <span className="text-lg font-bold tracking-tight text-gray-900">
-              レポート文字数カウンター
-            </span>
+            <div className="flex flex-col justify-center">
+                <span className="text-xl font-black text-gray-900 tracking-tight leading-none">レポカン</span>
+                <span className="text-[9px] text-gray-500 font-bold">レポート文字数カウンター</span>
+            </div>
           </Link>
         </div>
       </header>

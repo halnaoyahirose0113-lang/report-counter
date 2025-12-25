@@ -14,7 +14,7 @@ export default function Home() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   // 新機能用ステート
-  const [targetCount, setTargetCount] = useState(2000); // 目標文字数（初期値2000）
+  const [targetCount, setTargetCount] = useState(2000); 
   const [progress, setProgress] = useState(0);
 
   // 締め切りタイマー用
@@ -34,7 +34,7 @@ export default function Home() {
   useEffect(() => {
     const savedText = localStorage.getItem('report-text');
     const savedDeadline = localStorage.getItem('report-deadline');
-    const savedTarget = localStorage.getItem('report-target'); // 目標も保存
+    const savedTarget = localStorage.getItem('report-target');
     if (savedText) setText(savedText);
     if (savedDeadline) setDeadline(savedDeadline);
     if (savedTarget) setTargetCount(Number(savedTarget));
@@ -105,7 +105,6 @@ export default function Home() {
     }
   };
 
-  // 🦴 骨組み召喚ハンドラー
   const handleInsertSkeleton = () => {
     if (text && !confirm('現在入力されている文章が上書きされますが、よろしいですか？')) {
         return;
@@ -128,7 +127,6 @@ export default function Home() {
         return;
     }
     setIsAnalyzing(true);
-    // 擬似AI解析
     setTimeout(() => {
       try {
         const urlObj = new URL(refData.url);
@@ -161,12 +159,15 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans pb-20">
       
-      {/* ヘッダー */}
+      {/* ヘッダー：レポカン仕様に変更 */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/logo.jpg" alt="ロゴ" className="w-8 h-8 rounded-lg object-cover shadow-sm border border-gray-100" />
-            <h1 className="text-base font-bold text-gray-900 sm:text-xl text-nowrap">レポート文字数カウンター</h1>
+            <img src="/logo.jpg" alt="レポカンロゴ" className="w-9 h-9 rounded-xl object-cover shadow-sm border border-gray-100" />
+            <div className="flex flex-col justify-center">
+                <h1 className="text-xl font-black text-gray-900 tracking-tight leading-none">レポカン</h1>
+                <span className="text-[9px] text-gray-500 font-bold">レポート文字数カウンター</span>
+            </div>
           </div>
           <nav className="flex items-center gap-3">
              <Link href="/blog/report-structure" className="text-[10px] sm:text-sm font-bold text-blue-600 border border-blue-200 bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors">構成テンプレ</Link>
@@ -198,7 +199,7 @@ export default function Home() {
           </div>
         </div>
         
-        {/* 📈 目標達成プログレスバー（新機能） */}
+        {/* 📈 目標達成プログレスバー */}
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center justify-between mb-2">
                 <label className="text-xs font-bold text-gray-700 flex items-center gap-2">
@@ -232,7 +233,7 @@ export default function Home() {
         <section className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative">
           <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between overflow-x-auto">
             <div className="flex gap-2 shrink-0">
-                {/* 🦴 骨組み召喚ボタン（新機能） */}
+                {/* 🦴 骨組み召喚ボタン */}
                 <button onClick={handleInsertSkeleton} className="text-[10px] bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded font-bold shadow-sm transition-colors flex items-center gap-1">
                     <span>🦴</span>テンプレ召喚
                 </button>
@@ -303,7 +304,7 @@ export default function Home() {
           )}
         </section>
 
-        {/* 📖 神アイテムコーナー (書籍) */}
+        {/* 📖 神アイテムコーナー */}
         <section className="mt-10">
           <h3 className="text-base font-bold text-gray-800 mb-5 flex items-center gap-2">
             📖 レポート作成に役立つ神アイテム
@@ -361,12 +362,12 @@ export default function Home() {
           </a>
         </div>
 
-        {/* 📝 記事リンクコーナー (3記事版) */}
+        {/* 📝 記事リンクコーナー */}
         <section className="mt-8">
           <h3 className="text-sm font-bold text-gray-800 mb-3 ml-1">📝 人気の解説記事</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             
-            {/* 記事1: 参考文献 */}
+            {/* 記事1 */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
               <Link href="/blog/citation-rules" className="block group h-full flex flex-col">
                 <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
@@ -378,7 +379,7 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* 記事2: 文字数稼ぎ */}
+            {/* 記事2 */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
               <Link href="/blog/word-count-hacks" className="block group h-full flex flex-col">
                 <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
@@ -390,7 +391,7 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* 記事3: 構成 */}
+            {/* 記事3 */}
             <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
               <Link href="/blog/report-structure" className="block group h-full flex flex-col">
                 <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
