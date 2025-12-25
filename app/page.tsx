@@ -215,21 +215,21 @@ export default function Home() {
 
       <main className="max-w-4xl mx-auto px-4 mt-4 space-y-6">
 
-        {/* ⏳ 締め切りタイマー */}
-        <div className="bg-gray-900 rounded-2xl p-4 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-gray-700">
+        {/* ⏳ 締め切りタイマー（修正版） */}
+        <div className="bg-gray-900 rounded-2xl p-3 sm:p-4 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-gray-700">
           <div className="flex flex-col gap-1 w-full sm:w-auto text-center sm:text-left">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">提出期限まで残り</span>
             <div className="flex items-baseline justify-center sm:justify-start gap-2">
-              <span className="text-3xl font-black text-yellow-400 tabular-nums">{timeLeft.days}</span><span className="text-xs font-bold">日</span>
-              <span className="text-3xl font-black text-yellow-400 tabular-nums">{timeLeft.hours}</span><span className="text-xs font-bold">時間</span>
-              <span className="text-3xl font-black text-yellow-400 tabular-nums">{timeLeft.mins}</span><span className="text-xs font-bold">分</span>
+              <span className="text-2xl sm:text-3xl font-black text-yellow-400 tabular-nums">{timeLeft.days}</span><span className="text-xs font-bold">日</span>
+              <span className="text-2xl sm:text-3xl font-black text-yellow-400 tabular-nums">{timeLeft.hours}</span><span className="text-xs font-bold">時間</span>
+              <span className="text-2xl sm:text-3xl font-black text-yellow-400 tabular-nums">{timeLeft.mins}</span><span className="text-xs font-bold">分</span>
             </div>
           </div>
-          <div className="flex flex-col gap-1 w-full sm:w-auto">
+          <div className="flex flex-col gap-1 w-full sm:w-auto overflow-hidden">
              <span className="text-[9px] text-gray-500 font-bold ml-1">締め切り日時を設定</span>
              <input 
                 type="datetime-local" 
-                className="bg-gray-800 text-xs font-bold p-2.5 rounded-lg border border-gray-700 outline-none focus:border-yellow-400 w-full text-white"
+                className="bg-gray-800 text-xs font-bold p-2 rounded-lg border border-gray-700 outline-none focus:border-yellow-400 w-full max-w-full text-white box-border"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
               />
