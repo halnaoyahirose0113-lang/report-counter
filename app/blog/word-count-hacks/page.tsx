@@ -77,20 +77,24 @@ export default function WordCountHacks() {
               「そもそも何を書けばいいかわからない」という状態なら、以下の本がバイブルになります。
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-              <div className="border border-gray-200 rounded-xl p-4 flex items-center gap-4 shadow-sm">
-                <div className="flex-1">
-                  <h4 className="font-bold text-sm mb-1">論文の教室</h4>
-                  <p className="text-xs text-gray-500 mb-2">構成の型がわかれば、文字数は勝手に埋まります。</p>
-                  <a href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded inline-block font-bold">Amazonで見る</a>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <div className="border border-gray-200 rounded-xl p-4 flex flex-col items-center text-center shadow-sm">
+                  <h4 className="font-bold text-sm mb-2">論文の教室</h4>
+                  <p className="text-xs text-gray-500 mb-3">構成の型がわかれば、文字数は勝手に埋まります。</p>
+                  <img src="https://images-na.ssl-images-amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg" alt="論文の教室" className="w-20 mb-3 shadow-md" />
+                  <div className="flex gap-2 w-full mt-auto">
+                    <a href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#FF9900] text-white text-xs font-bold py-2 rounded hover:opacity-80">Amazon</a>
+                    <a href="https://a.r10.to/hkyzb7" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#BF0000] text-white text-xs font-bold py-2 rounded hover:opacity-80">楽天</a>
+                  </div>
               </div>
-              <div className="border border-gray-200 rounded-xl p-4 flex items-center gap-4 shadow-sm">
-                <div className="flex-1">
-                  <h4 className="font-bold text-sm mb-1">コピペと言われない書き方</h4>
-                  <p className="text-xs text-gray-500 mb-2">引用で文字数を増やす正しいルールが学べます。</p>
-                  <a href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded inline-block font-bold">Amazonで見る</a>
-                </div>
+              <div className="border border-gray-200 rounded-xl p-4 flex flex-col items-center text-center shadow-sm">
+                  <h4 className="font-bold text-sm mb-2">コピペと言われない書き方</h4>
+                  <p className="text-xs text-gray-500 mb-3">引用で文字数を増やす正しいルールが学べます。</p>
+                  <img src="https://images-na.ssl-images-amazon.com/images/P/B077RWQNKN.09.LZZZZZZZ.jpg" alt="コピペと言われない書き方" className="w-20 mb-3 shadow-md" />
+                  <div className="flex gap-2 w-full mt-auto">
+                    <a href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#FF9900] text-white text-xs font-bold py-2 rounded hover:opacity-80">Amazon</a>
+                    <a href="https://a.r10.to/h5e9On" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#BF0000] text-white text-xs font-bold py-2 rounded hover:opacity-80">楽天</a>
+                  </div>
               </div>
             </div>
 

@@ -482,6 +482,7 @@ export default function Home() {
       <footer className="max-w-4xl mx-auto px-4 mt-16 mb-8 text-center text-gray-400 text-[10px]">
         <div className="flex justify-center gap-8 mb-3 font-semibold text-nowrap">
           <Link href="/privacy" className="hover:text-gray-600 underline underline-offset-4 decoration-gray-200">プライバシーポリシー</Link>
+          <Link href="/about" className="hover:text-gray-600 underline underline-offset-4 decoration-gray-200">運営者情報</Link>
           <a href="https://docs.google.com/forms/d/e/1FAIpQLSeumYrx_6P4aHZZGPBHhvF-0F9iATjUw1baHombHHsj7G59Kw/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" className="hover:text-gray-600 underline underline-offset-4 decoration-gray-200">お問合せ</a>
         </div>
         <p>&copy; 2025 Acky</p>

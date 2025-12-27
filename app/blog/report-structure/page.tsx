@@ -90,13 +90,16 @@ export default function ReportStructure() {
             </p>
 
             {/* 書籍アフィリエイト */}
-            <div className="mt-10 p-4 border-t border-gray-200">
-              <p className="text-sm font-bold mb-3 text-center">構成作りに役立つ神アイテム</p>
-              <div className="flex justify-center gap-4">
-                 <div className="w-32 text-center">
-                    <img src="https://images-na.ssl-images-amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg" className="w-16 mx-auto mb-2 shadow-sm" />
-                    <p className="text-[10px] font-bold">論文の教室</p>
-                    <a href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" className="block mt-1 text-[9px] text-blue-500 underline">Amazonで見る</a>
+            <div className="mt-10 p-6 border-t border-gray-200">
+              <p className="text-sm font-bold mb-4 text-center">構成作りに役立つ神アイテム</p>
+              <div className="flex justify-center">
+                 <div className="w-48 text-center border p-4 rounded-xl shadow-sm">
+                    <img src="https://images-na.ssl-images-amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg" alt="論文の教室" className="w-20 mx-auto mb-3 shadow-md" />
+                    <p className="text-xs font-bold mb-2">論文の教室</p>
+                    <div className="flex gap-1 justify-center">
+                      <a href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="bg-[#FF9900] text-white text-[10px] px-3 py-1.5 rounded font-bold hover:opacity-80">Amazon</a>
+                      <a href="https://a.r10.to/hkyzb7" target="_blank" rel="noopener noreferrer" className="bg-[#BF0000] text-white text-[10px] px-3 py-1.5 rounded font-bold hover:opacity-80">楽天</a>
+                    </div>
                  </div>
               </div>
             </div>
