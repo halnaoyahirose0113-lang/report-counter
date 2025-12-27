@@ -175,7 +175,7 @@ export default function Home() {
     bg: isDarkMode ? 'bg-gray-900' : 'bg-gray-50',
     text: isDarkMode ? 'text-gray-100' : 'text-gray-800',
     card: isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100',
-    cardText: isDarkMode ? 'text-gray-200' : 'text-gray-700',
+    cardText: isDarkMode ? 'text-gray-200' : 'text-gray-900',
     subText: isDarkMode ? 'text-gray-400' : 'text-gray-500',
     input: isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-800',
     header: isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200',
@@ -185,24 +185,16 @@ export default function Home() {
 
   // 🛍️ 商品データ（全カテゴリ4つずつ）
   const bookItems = [
-    // 👇 修正: 論文の教室（楽天短縮リンク）
     { id: 1, name: "最新版 論文の教室", img: "https://images-na.ssl-images-amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg", desc: "レポート書き方のバイブル", amazon: "https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22", rakuten: "https://a.r10.to/hkRCci" },
-    // 👇 修正: コピペと言われない（楽天短縮リンク）
     { id: 2, name: "コピペと言われない書き方", img: "https://images-na.ssl-images-amazon.com/images/P/B077RWQNKN.09.LZZZZZZZ.jpg", desc: "剽窃判定を回避する技術", amazon: "https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22", rakuten: "https://a.r10.to/hPgrg8" },
-    // 👇 修正: 作文技術（楽天短縮リンク）
     { id: 9, name: "日本語の作文技術（新版）", img: "https://shop.r10s.jp/book/cabinet/0943/9784062130943.jpg?fitin=560:400&composite-to=*,*|560:400", desc: "40年売れ続ける文章術の神本", amazon: "https://www.amazon.co.jp/dp/B01MYXH4J1?tag=acky0113-22", rakuten: "https://a.r10.to/hkyzb7" },
-    // 👇 修正: 組み立て方（楽天短縮リンク）
     { id: 10, name: "レポートの組み立て方", img: "https://shop.r10s.jp/book/cabinet/1216/9784480081216.jpg?fitin=560:400&composite-to=*,*|560:400", desc: "構成に悩む時間をゼロにする", amazon: "https://www.amazon.co.jp/dp/B00E5XAXQ4?tag=acky0113-22", rakuten: "https://a.r10.to/h5e9On" },
   ];
 
   const gadgetItems = [
-    // 👇 修正: BoYata（楽天短縮リンク）
     { id: 3, name: "BoYata PCスタンド", img: "https://m.media-amazon.com/images/I/61SD-+LxQQL._AC_SX425_.jpg", desc: "猫背・肩こり解消の神台", amazon: "https://www.amazon.co.jp/dp/B07H774Q42?tag=acky0113-22", rakuten: "https://a.r10.to/h5frRJ" },
-    // 👇 修正: JINS（楽天短縮リンク）
     { id: 4, name: "JINS PCメガネ", img: "https://m.media-amazon.com/images/I/61spsKphurL._AC_SX679_.jpg", desc: "ブルーライトを40%カット", amazon: "https://www.amazon.co.jp/dp/B0FRZG38TW?tag=acky0113-22", rakuten: "https://a.r10.to/hPUSvN" },
-    // 👇 修正: P40i（楽天短縮リンク）
     { id: 5, name: "Anker Soundcore P31i", img: "https://m.media-amazon.com/images/I/51nHT2kQ1bL._AC_SX679_.jpg", desc: "集中力爆上げノイキャン", amazon: "https://www.amazon.co.jp/dp/B0FNRS5WB2?tag=acky0113-22", rakuten: "https://a.r10.to/h5QtdJ" },
-    // 👇 修正: 急速充電器（楽天短縮リンク）
     { id: 6, name: "Anker 急速充電器", img: "https://m.media-amazon.com/images/I/41HcsraSzsL._AC_SY606_.jpg", desc: "カフェで充電がない絶望を防ぐ", amazon: "https://www.amazon.co.jp/dp/B0CL8S8CS5?tag=acky0113-22", rakuten: "https://a.r10.to/hPMi8F" },
   ];
 
@@ -437,40 +429,93 @@ export default function Home() {
           </a>
         </div>
 
-        {/* 📝 記事リンクコーナー */}
-        <section className="mt-8">
-          <h3 className={`text-sm font-bold mb-3 ml-1 ${theme.cardText}`}>📝 人気の解説記事</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className={`p-4 rounded-xl border shadow-sm hover:shadow-md transition-all ${theme.card}`}>
-              <Link href="/blog/citation-rules" className="block group h-full flex flex-col">
-                <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
-                  【コピペOK】参考文献の書き方完全ガイド
-                </h4>
-                <p className={`text-[10px] mt-auto ${theme.subText}`}>
-                  本やWebサイトを引用するときの正しい書き方。
-                </p>
-              </Link>
-            </div>
-            <div className={`p-4 rounded-xl border shadow-sm hover:shadow-md transition-all ${theme.card}`}>
-              <Link href="/blog/word-count-hacks" className="block group h-full flex flex-col">
-                <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
-                  レポートの文字数が足りない！自然に増やす裏技
-                </h4>
-                <p className={`text-[10px] mt-auto ${theme.subText}`}>
-                  質を落とさずに文字数を増やすテクニック5選。
-                </p>
-              </Link>
-            </div>
-            <div className={`p-4 rounded-xl border shadow-sm hover:shadow-md transition-all ${theme.card}`}>
-              <Link href="/blog/report-structure" className="block group h-full flex flex-col">
-                <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
-                  【テンプレ】序論・本論・結論の書き方
-                </h4>
-                <p className={`text-[10px] mt-auto ${theme.subText}`}>
-                  レポート構成の黄金比率と書き出しの例文。
-                </p>
-              </Link>
-            </div>
+        {/* 📝 レポート課題を攻略する！お役立ちガイド (新設・統合版) */}
+        <section className="mt-12">
+          <h3 className={`text-base font-bold mb-6 ml-1 flex items-center gap-2 ${theme.cardText}`}>
+            📝 レポート課題を攻略する！お役立ちガイド
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            {/* 記事: 語彙力 */}
+            <Link href="/blog/vocabulary-list" className={`block p-5 rounded-xl border shadow-sm hover:shadow-md transition-all group ${theme.card}`}>
+              <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-sm">
+                【語彙力】「〜と思います」は卒業！賢く見える言い換え
+              </h4>
+              <p className={`text-[10px] leading-relaxed ${theme.subText}`}>
+                文章が幼稚に見えてしまう悩みを解決。そのまま使える接続詞や文末表現をまとめました。
+              </p>
+            </Link>
+
+            {/* 記事: 参考文献の探し方 */}
+            <Link href="/blog/research-tips" className={`block p-5 rounded-xl border shadow-sm hover:shadow-md transition-all group ${theme.card}`}>
+              <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-sm">
+                【ネタ探し】ネットだけで完結！信頼できる情報の探し方
+              </h4>
+              <p className={`text-[10px] leading-relaxed ${theme.subText}`}>
+                図書館に行かなくても大丈夫。Wikipedia禁止でも使える検索テクニックを紹介。
+              </p>
+            </Link>
+
+            {/* 記事: 書き出しテンプレ */}
+            <Link href="/blog/intro-template" className={`block p-5 rounded-xl border shadow-sm hover:shadow-md transition-all group ${theme.card}`}>
+              <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-sm">
+                【書き出し】「序論」の穴埋めテンプレ！3分で書く方法
+              </h4>
+              <p className={`text-[10px] leading-relaxed ${theme.subText}`}>
+                何から書き始めればいいか分からない人へ。背景・目的・構成を埋めるだけの魔法の型。
+              </p>
+            </Link>
+
+            {/* 記事: S評価チェックリスト */}
+            <Link href="/blog/grade-s-checklist" className={`block p-5 rounded-xl border shadow-sm hover:shadow-md transition-all group ${theme.card}`}>
+              <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-sm">
+                【評価基準】教授はここを見る！S評価を取るチェック項目
+              </h4>
+              <p className={`text-[10px] leading-relaxed ${theme.subText}`}>
+                提出直前に確認！誤字脱字や「だ・である」調など、減点を防ぐポイントを公開。
+              </p>
+            </Link>
+
+            {/* 記事: スマホ執筆 */}
+            <Link href="/blog/mobile-writing" className={`block p-5 rounded-xl border shadow-sm hover:shadow-md transition-all group ${theme.card}`}>
+              <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-sm">
+                【スマホ活用】PCなしでレポートを爆速で書く入力術
+              </h4>
+              <p className={`text-[10px] leading-relaxed ${theme.subText}`}>
+                通学電車で課題を終わらせたい！音声入力やレポカン活用で、隙間時間を有効活用しよう。
+              </p>
+            </Link>
+
+            {/* 記事: 参考文献ルール (既存) */}
+            <Link href="/blog/citation-rules" className={`block p-5 rounded-xl border shadow-sm hover:shadow-md transition-all group ${theme.card}`}>
+              <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-sm">
+                【基礎】参考文献の書き方ルール徹底解説
+              </h4>
+              <p className={`text-[10px] leading-relaxed ${theme.subText}`}>
+                URL、著者名、発行年... 正しいフォーマットを実例付きで解説します。
+              </p>
+            </Link>
+
+             {/* 記事: 文字数稼ぎ (既存) */}
+             <Link href="/blog/word-count-hacks" className={`block p-5 rounded-xl border shadow-sm hover:shadow-md transition-all group ${theme.card}`}>
+              <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-sm">
+                【裏技】レポートの文字数が足りない時の自然な増やし方
+              </h4>
+              <p className={`text-[10px] leading-relaxed ${theme.subText}`}>
+                質を落とさずに文字数を増やすテクニック5選。
+              </p>
+            </Link>
+
+            {/* 記事: 構成全般 (既存) */}
+             <Link href="/blog/report-structure" className={`block p-5 rounded-xl border shadow-sm hover:shadow-md transition-all group ${theme.card}`}>
+              <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-sm">
+                【全体構成】序論・本論・結論の書き方と黄金比率
+              </h4>
+              <p className={`text-[10px] leading-relaxed ${theme.subText}`}>
+                レポート構成の基本と、それぞれの役割について。
+              </p>
+            </Link>
+
           </div>
         </section>
 
