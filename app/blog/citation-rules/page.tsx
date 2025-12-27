@@ -9,12 +9,19 @@ export default function CitationRules() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
       
-      {/* ヘッダー */}
-      <header className="bg-white border-b sticky top-0 z-50 shadow-sm">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="font-bold text-gray-900 hover:opacity-70 transition-opacity flex items-center gap-2">
-            <span>← ツールに戻る</span>
+      {/* ヘッダー（統一デザイン） */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+            <img src="/logo.jpg" alt="レポカンロゴ" className="w-9 h-9 rounded-xl object-cover shadow-sm border border-gray-100" />
+            <div className="flex flex-col justify-center">
+                <h1 className="text-xl font-black tracking-tight leading-none text-gray-900">レポカン</h1>
+                <span className="text-[9px] font-bold text-gray-500">レポート文字数カウンター</span>
+            </div>
           </Link>
+          <nav className="flex items-center gap-3">
+             <Link href="/blog/report-structure" className="hidden sm:block text-[10px] sm:text-sm font-bold text-blue-600 border border-blue-200 bg-blue-50 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors">構成テンプレ</Link>
+          </nav>
         </div>
       </header>
 
