@@ -6,7 +6,9 @@ import Script from 'next/script'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  // 👇 ブランド名「レポカン」を先頭に！
+  // 👇 ドメイン変更に伴う必須設定（SEO用）
+  metadataBase: new URL('https://repokan.com'),
+
   title: 'レポカン | レポート文字数カウンター＆参考文献自動作成',
   description: 'レポート課題を爆速化する「レポカン」。参考文献の自動作成、文字数カウント、言い換え辞典、骨組みテンプレート召喚機能を搭載。登録不要で使えます。',
   icons: {
