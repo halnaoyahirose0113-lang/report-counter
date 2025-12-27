@@ -40,7 +40,7 @@ export default function Home() {
     const savedText = localStorage.getItem('report-text');
     const savedDeadline = localStorage.getItem('report-deadline');
     const savedTarget = localStorage.getItem('report-target');
-    const savedTheme = localStorage.getItem('report-theme'); // テーマ保存
+    const savedTheme = localStorage.getItem('report-theme'); 
     
     if (savedText) setText(savedText);
     if (savedDeadline) setDeadline(savedDeadline);
@@ -129,16 +129,12 @@ export default function Home() {
     setText(skeleton);
   };
 
-  // 🔍 文体チェック（です・ます調を検出）
   const handleStyleCheck = () => {
     if (!text) return;
-    
-    // 「です・ます」などを赤くハイライトするHTMLを作成
     let checkedHTML = text
-        .replace(/\n/g, '<br/>') // 改行を維持
+        .replace(/\n/g, '<br/>')
         .replace(/(です|ます|でした|ました|ません|ましょう)(。|、| |$|<)/g, 
             '<span class="bg-red-200 text-red-800 font-bold px-1 rounded mx-0.5 border border-red-300 shadow-sm">$1</span>$2');
-
     setStyleCheckResult({ __html: checkedHTML });
     setShowStyleCheck(true);
   };
@@ -174,7 +170,7 @@ export default function Home() {
     setGeneratedRef(result);
   };
 
-  // 🎨 テーマに応じたクラス定義
+  // 🎨 テーマ定義
   const theme = {
     bg: isDarkMode ? 'bg-gray-900' : 'bg-gray-50',
     text: isDarkMode ? 'text-gray-100' : 'text-gray-800',
@@ -186,6 +182,49 @@ export default function Home() {
     textarea: isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-700',
     stats: isDarkMode ? 'bg-gray-950 border-gray-700' : 'bg-gray-50 border-gray-200',
   };
+
+  // 🛍️ 商品データ（全カテゴリ4つずつ）
+  const bookItems = [
+    // 👇 修正: 論文の教室（楽天短縮リンク）
+    { id: 1, name: "最新版 論文の教室", img: "https://images-na.ssl-images-amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg", desc: "レポート書き方のバイブル", amazon: "https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22", rakuten: "https://a.r10.to/hkRCci" },
+    // 👇 修正: コピペと言われない（楽天短縮リンク）
+    { id: 2, name: "コピペと言われない書き方", img: "https://images-na.ssl-images-amazon.com/images/P/B077RWQNKN.09.LZZZZZZZ.jpg", desc: "剽窃判定を回避する技術", amazon: "https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22", rakuten: "https://a.r10.to/hPgrg8" },
+    // 👇 修正: 作文技術（楽天短縮リンク）
+    { id: 9, name: "日本語の作文技術（新版）", img: "https://shop.r10s.jp/book/cabinet/0943/9784062130943.jpg?fitin=560:400&composite-to=*,*|560:400", desc: "40年売れ続ける文章術の神本", amazon: "https://www.amazon.co.jp/dp/B01MYXH4J1?tag=acky0113-22", rakuten: "https://a.r10.to/hkyzb7" },
+    // 👇 修正: 組み立て方（楽天短縮リンク）
+    { id: 10, name: "レポートの組み立て方", img: "https://shop.r10s.jp/book/cabinet/1216/9784480081216.jpg?fitin=560:400&composite-to=*,*|560:400", desc: "構成に悩む時間をゼロにする", amazon: "https://www.amazon.co.jp/dp/B00E5XAXQ4?tag=acky0113-22", rakuten: "https://a.r10.to/h5e9On" },
+  ];
+
+  const gadgetItems = [
+    // 👇 修正: BoYata（楽天短縮リンク）
+    { id: 3, name: "BoYata PCスタンド", img: "https://m.media-amazon.com/images/I/61SD-+LxQQL._AC_SX425_.jpg", desc: "猫背・肩こり解消の神台", amazon: "https://www.amazon.co.jp/dp/B07H774Q42?tag=acky0113-22", rakuten: "https://a.r10.to/h5frRJ" },
+    // 👇 修正: JINS（楽天短縮リンク）
+    { id: 4, name: "JINS PCメガネ", img: "https://m.media-amazon.com/images/I/61spsKphurL._AC_SX679_.jpg", desc: "ブルーライトを40%カット", amazon: "https://www.amazon.co.jp/dp/B0FRZG38TW?tag=acky0113-22", rakuten: "https://a.r10.to/hPUSvN" },
+    // 👇 修正: P40i（楽天短縮リンク）
+    { id: 5, name: "Anker Soundcore P31i", img: "https://m.media-amazon.com/images/I/51nHT2kQ1bL._AC_SX679_.jpg", desc: "集中力爆上げノイキャン", amazon: "https://www.amazon.co.jp/dp/B0FNRS5WB2?tag=acky0113-22", rakuten: "https://a.r10.to/h5QtdJ" },
+    // 👇 修正: 急速充電器（楽天短縮リンク）
+    { id: 6, name: "Anker 急速充電器", img: "https://m.media-amazon.com/images/I/41HcsraSzsL._AC_SY606_.jpg", desc: "カフェで充電がない絶望を防ぐ", amazon: "https://www.amazon.co.jp/dp/B0CL8S8CS5?tag=acky0113-22", rakuten: "https://a.r10.to/hPMi8F" },
+  ];
+
+  const relaxItems = [
+    { id: 7, name: "蒸気でホットアイマスク", img: "https://m.media-amazon.com/images/I/51tscyPQ3JL._AC_SX425_.jpg", desc: "酷使した目を回復させる", amazon: "https://www.amazon.co.jp/dp/B0FSSPL1DL?tag=acky0113-22", rakuten: "https://a.r10.to/hREj9k" },
+    { id: 8, name: "森永 ラムネ", img: "https://m.media-amazon.com/images/I/5195I5AfR3L._AC_SY300_SX300_QL70_ML2_.jpg", desc: "東大生も愛用する脳の燃料", amazon: "https://www.amazon.co.jp/dp/B0CHM7D6LZ?tag=acky0113-22", rakuten: "https://a.r10.to/hg9lNm" },
+    { id: 11, name: "GABA チョコレート", img: "https://m.media-amazon.com/images/I/71239lIiz-L._AC_SX679_PIbundle-10,TopRight,0,0_SH20_.jpg", desc: "ストレスを低減する神チョコ", amazon: "https://www.amazon.co.jp/dp/B0077VOZP6?tag=acky0113-22", rakuten: "https://a.r10.to/hkMqwh" },
+    { id: 12, name: "蒸気でグッドナイト", img: "https://m.media-amazon.com/images/I/71LpTmH9HRL._AC_SY300_SX300_QL70_ML2_.jpg", desc: "首元を温めて気絶級の眠りへ", amazon: "https://www.amazon.co.jp/dp/B0F7HKDVLZ?tag=acky0113-22", rakuten: "https://a.r10.to/h5AW0U" },
+  ];
+
+  // 商品カードコンポーネント
+  const ProductCard = ({ item }: { item: any }) => (
+    <div className={`snap-center shrink-0 w-[160px] p-3 rounded-2xl border flex flex-col items-center text-center shadow-sm hover:shadow-md transition-all ${theme.card}`}>
+      <img src={item.img} alt={item.name} className="w-full h-32 object-contain mb-2 rounded p-1" />
+      <h4 className={`font-bold text-[10px] h-8 flex items-center justify-center leading-tight line-clamp-2 w-full ${theme.cardText}`}>{item.name}</h4>
+      <p className={`text-[9px] mb-2 line-clamp-1 ${theme.subText}`}>{item.desc}</p>
+      <div className="flex w-full gap-1 mt-auto">
+        <a href={item.amazon} target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#FF9900] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">Amazon</a>
+        <a href={item.rakuten} target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#BF0000] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">楽天</a>
+      </div>
+    </div>
+  );
 
   return (
     <div className={`min-h-screen font-sans pb-20 transition-colors duration-300 ${theme.bg} ${theme.text}`}>
@@ -201,7 +240,6 @@ export default function Home() {
             </div>
           </div>
           <nav className="flex items-center gap-3">
-             {/* 🌙 ダークモード切替ボタン */}
              <button 
                 onClick={() => setIsDarkMode(!isDarkMode)}
                 className={`p-2 rounded-full transition-all ${isDarkMode ? 'bg-yellow-400 text-gray-900' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
@@ -215,7 +253,7 @@ export default function Home() {
 
       <main className="max-w-4xl mx-auto px-4 mt-4 space-y-6">
 
-        {/* ⏳ 締め切りタイマー（修正版） */}
+        {/* ⏳ 締め切りタイマー */}
         <div className="bg-gray-900 rounded-2xl p-3 sm:p-4 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-gray-700">
           <div className="flex flex-col gap-1 w-full sm:w-auto text-center sm:text-left">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">提出期限まで残り</span>
@@ -266,7 +304,7 @@ export default function Home() {
             </div>
         </div>
 
-        {/* 🔍 文体チェック結果表示エリア（表示時のみ） */}
+        {/* 🔍 文体チェック結果表示 */}
         {showStyleCheck && styleCheckResult && (
             <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-5 animate-in fade-in slide-in-from-top-4 shadow-lg">
                 <div className="flex justify-between items-center mb-3">
@@ -279,20 +317,16 @@ export default function Home() {
                     className="text-sm leading-relaxed text-gray-800 bg-white p-4 rounded-xl border border-red-100 max-h-60 overflow-y-auto"
                     dangerouslySetInnerHTML={styleCheckResult}
                 />
-                <p className="text-[10px] text-red-500 mt-2 font-bold text-center">
-                    ※ 赤くなっている「です・ます」部分を「だ・である」に直しましょう！
-                </p>
             </div>
         )}
 
-        {/* メインエディタ & カウンター */}
+        {/* メインエディタ */}
         <section className={`rounded-2xl shadow-sm border overflow-hidden relative ${theme.card}`}>
           <div className={`px-4 py-2 border-b flex items-center justify-between overflow-x-auto ${theme.stats} ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
             <div className="flex gap-2 shrink-0">
                 <button onClick={handleInsertSkeleton} className="text-[10px] bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded font-bold shadow-sm transition-colors flex items-center gap-1">
                     <span>🦴</span>テンプレ
                 </button>
-                {/* 🔍 文体チェックボタン */}
                 <button onClick={handleStyleCheck} className="text-[10px] bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 px-3 py-1 rounded font-bold shadow-sm transition-colors flex items-center gap-1">
                     <span>🔍</span>文体チェック
                 </button>
@@ -362,55 +396,38 @@ export default function Home() {
           )}
         </section>
 
-        {/* 📖 神アイテムコーナー */}
-        <section className="mt-10">
-          <h3 className={`text-base font-bold mb-5 flex items-center gap-2 ${theme.cardText}`}>
-            📖 レポート作成に役立つ神アイテム
-          </h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div className={`p-4 rounded-2xl border shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all ${theme.card}`}>
-              <img src="https://images-na.ssl-images-amazon.com/images/P/4140912723.09.LZZZZZZZ.jpg" alt="最新版 論文の教室" className="w-16 h-24 object-cover mb-3 rounded shadow-sm" />
-              <h4 className={`font-bold text-[11px] h-8 flex items-center leading-tight ${theme.cardText}`}>最新版 論文の教室</h4>
-              <div className="flex w-full gap-1 mt-auto">
-                <a href="https://www.amazon.co.jp/dp/4140912723?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#FF9900] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">Amazon</a>
-                <a href="https://a.r10.to/hkR3I2" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#BF0000] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">楽天</a>
+        {/* 🛍️ 商品コーナー（カテゴリ別・横スクロール） */}
+        <div className="space-y-8 mt-10">
+            {/* 📖 本・参考書 */}
+            <section>
+              <h3 className={`text-base font-bold mb-4 flex items-center gap-2 ${theme.cardText}`}>
+                📖 レポート作成に役立つ神アイテム
+              </h3>
+              <div className="flex overflow-x-auto pb-4 gap-4 snap-x snap-mandatory">
+                {bookItems.map((item) => <ProductCard key={item.id} item={item} />)}
               </div>
-            </div>
-            <div className={`p-4 rounded-2xl border shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all ${theme.card}`}>
-              <img src="https://images-na.ssl-images-amazon.com/images/P/B077RWQNKN.09.LZZZZZZZ.jpg" alt="コピペと言われないレポート" className="w-16 h-24 object-cover mb-3 rounded shadow-sm" />
-              <h4 className={`font-bold text-[11px] h-8 flex items-center leading-tight ${theme.cardText}`}>コピペと言われない書き方</h4>
-              <div className="flex w-full gap-1 mt-auto">
-                <a href="https://www.amazon.co.jp/dp/B077RWQNKN?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#FF9900] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">Amazon</a>
-                <a href="https://a.r10.to/h5fKiw" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#BF0000] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">楽天</a>
-              </div>
-            </div>
-          </div>
-        </section>
+            </section>
 
-        {/* 💻 ガジェットコーナー */}
-        <section className="mt-10">
-          <h3 className={`text-base font-bold mb-5 flex items-center gap-2 ${theme.cardText}`}>
-            💻 執筆が爆速になる神ガジェット
-          </h3>
-          <div className="grid grid-cols-2 gap-4">
-            <div className={`p-4 rounded-2xl border shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all ${theme.card}`}>
-              <img src="https://m.media-amazon.com/images/I/61SD-+LxQQL._AC_SX425_.jpg" alt="PCスタンド" className="w-16 h-16 object-contain mb-3 mt-4" />
-              <h4 className={`font-bold text-[11px] h-8 flex items-center leading-tight ${theme.cardText}`}>BoYata PCスタンド</h4>
-              <div className="flex w-full gap-1 mt-auto">
-                <a href="https://www.amazon.co.jp/dp/B07H774Q42?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#FF9900] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">Amazon</a>
-                <a href="https://a.r10.to/h5n0fy" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#BF0000] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">楽天</a>
+            {/* 💻 ガジェット */}
+            <section>
+              <h3 className={`text-base font-bold mb-4 flex items-center gap-2 ${theme.cardText}`}>
+                💻 執筆が爆速になる神ガジェット
+              </h3>
+              <div className="flex overflow-x-auto pb-4 gap-4 snap-x snap-mandatory">
+                {gadgetItems.map((item) => <ProductCard key={item.id} item={item} />)}
               </div>
-            </div>
-            <div className={`p-4 rounded-2xl border shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all ${theme.card}`}>
-              <img src="https://m.media-amazon.com/images/I/61spsKphurL._AC_SX679_.jpg" alt="ブルーライトカットメガネ" className="w-16 h-16 object-contain mb-3 mt-4" />
-              <h4 className={`font-bold text-[11px] h-8 flex items-center leading-tight ${theme.cardText}`}>ブルーライトカットメガネ</h4>
-              <div className="flex w-full gap-1 mt-auto">
-                <a href="https://www.amazon.co.jp/dp/B0FRZG38TW?tag=acky0113-22" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#FF9900] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">Amazon</a>
-                <a href="https://a.r10.to/hP5chl" target="_blank" rel="noopener noreferrer" className="flex-1 bg-[#BF0000] text-white text-[9px] font-bold py-2 rounded-lg text-center hover:opacity-90">楽天</a>
+            </section>
+
+            {/* 🍬 リラックス・差し入れ */}
+            <section>
+              <h3 className={`text-base font-bold mb-4 flex items-center gap-2 ${theme.cardText}`}>
+                🍬 疲れた脳に効くリラックス・差し入れ
+              </h3>
+              <div className="flex overflow-x-auto pb-4 gap-4 snap-x snap-mandatory">
+                {relaxItems.map((item) => <ProductCard key={item.id} item={item} />)}
               </div>
-            </div>
-          </div>
-        </section>
+            </section>
+        </div>
 
         {/* Amazon Prime バナー */}
         <div className="my-8">
@@ -424,7 +441,6 @@ export default function Home() {
         <section className="mt-8">
           <h3 className={`text-sm font-bold mb-3 ml-1 ${theme.cardText}`}>📝 人気の解説記事</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {/* 記事1 */}
             <div className={`p-4 rounded-xl border shadow-sm hover:shadow-md transition-all ${theme.card}`}>
               <Link href="/blog/citation-rules" className="block group h-full flex flex-col">
                 <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
@@ -435,7 +451,6 @@ export default function Home() {
                 </p>
               </Link>
             </div>
-            {/* 記事2 */}
             <div className={`p-4 rounded-xl border shadow-sm hover:shadow-md transition-all ${theme.card}`}>
               <Link href="/blog/word-count-hacks" className="block group h-full flex flex-col">
                 <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
@@ -446,7 +461,6 @@ export default function Home() {
                 </p>
               </Link>
             </div>
-            {/* 記事3 */}
             <div className={`p-4 rounded-xl border shadow-sm hover:shadow-md transition-all ${theme.card}`}>
               <Link href="/blog/report-structure" className="block group h-full flex flex-col">
                 <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-xs leading-relaxed">
