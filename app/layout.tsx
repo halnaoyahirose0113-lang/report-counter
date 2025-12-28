@@ -17,7 +17,8 @@ export const metadata: Metadata = {
     apple: '/logo.jpg',
   },
   verification: {
-    google: 'SyqUrfgc1zTfMYdiIE8IX6T46WQ_785iDjCbPkuoIzk', 
+    // 👇 ここを新しい確認コードに書き換えました！
+    google: 's8Y-JpBUNRU2d3Q4gfIn_1pzO_a4B0cH6FydbKtxy08', 
   },
   other: {
     'google-adsense-account': 'ca-pub-4656581903403841',
