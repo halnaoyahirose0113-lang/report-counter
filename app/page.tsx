@@ -8,7 +8,19 @@ export default function Home() {
   // --- 状態管理 ---
   const [text, setText] = useState('');
   const [excludeReferences, setExcludeReferences] = useState(false);
-  const [refData, setRefData] = useState({ title: '', author: '', url: '' });
+  
+  // 👇 参考文献用データの拡張（論文対応）
+  const [citationType, setCitationType] = useState<'web' | 'paper'>('web'); // 'web' or 'paper'
+  const [refData, setRefData] = useState({ 
+    title: '', 
+    author: '', 
+    url: '',
+    journal: '', // 掲載誌名・出版社
+    pubYear: '', // 発行年
+    vol: '',     // 巻数
+    pages: ''    // ページ数
+  });
+  
   const [generatedRef, setGeneratedRef] = useState('');
   const [isSaved, setIsSaved] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -164,9 +176,19 @@ export default function Home() {
   };
 
   const handleGenerateRef = () => {
-    const date = new Date();
-    const today = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
-    const result = `${refData.author ? refData.author + '. ' : ''}『${refData.title}』. (参照 ${today}), ${refData.url}`;
+    let result = '';
+
+    if (citationType === 'web') {
+      // 🌐 Webサイトモード
+      const date = new Date();
+      const today = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+      result = `${refData.author ? refData.author + '. ' : ''}“${refData.title}”. (参照 ${today}), ${refData.url}`;
+    } else {
+      // 📖 論文・書籍モード
+      // 一般的な形式：著者名. "タイトル". 掲載誌/出版社. 発行年, 巻(号), p.開始-終了.
+      result = `${refData.author ? refData.author + '. ' : ''}“${refData.title}”. ${refData.journal ? refData.journal + '. ' : ''}${refData.pubYear}${refData.vol ? ', ' + refData.vol : ''}${refData.pages ? ', p.' + refData.pages : ''}.`;
+    }
+
     setGeneratedRef(result);
   };
 
@@ -363,23 +385,63 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 📚 参考文献メーカー */}
+        {/* 📚 参考文献メーカー（論文対応版） */}
         <section className={`rounded-xl shadow-sm border p-5 ${theme.card}`}>
           <div className="flex items-center justify-between mb-3">
              <h2 className={`text-sm font-bold flex items-center gap-2 ${theme.cardText}`}>📚 参考文献メーカー</h2>
-             <span className="text-[9px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-bold">時短機能付</span>
+             <span className="text-[9px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-bold">論文対応</span>
           </div>
+
+          {/* モード切替タブ */}
+          <div className="flex bg-gray-100 p-1 rounded-lg mb-4">
+            <button 
+              onClick={() => setCitationType('web')}
+              className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${citationType === 'web' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+            >
+              🌐 Webサイト
+            </button>
+            <button 
+              onClick={() => setCitationType('paper')}
+              className={`flex-1 py-1.5 text-xs font-bold rounded-md transition-all ${citationType === 'paper' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+            >
+              📖 論文・書籍
+            </button>
+          </div>
+
           <div className="space-y-3">
-            <div className="flex gap-2">
-              <input type="text" placeholder="URLを貼って自動入力" className={`flex-1 border rounded px-3 py-2 text-sm outline-none ${theme.input}`} value={refData.url} onChange={(e) => setRefData({...refData, url: e.target.value})} />
-              <button onClick={handleAutoFill} disabled={isAnalyzing} className="bg-blue-600 text-white text-[10px] font-bold px-4 py-2 rounded shadow-sm hover:bg-blue-700 transition-colors">{isAnalyzing ? "解析中" : "⚡自動入力"}</button>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <input type="text" placeholder="タイトル" className={`border rounded px-3 py-2 text-xs outline-none ${theme.input}`} value={refData.title} onChange={(e) => setRefData({...refData, title: e.target.value})} />
-              <input type="text" placeholder="著者/サイト名" className={`border rounded px-3 py-2 text-xs outline-none ${theme.input}`} value={refData.author} onChange={(e) => setRefData({...refData, author: e.target.value})} />
-            </div>
+            {/* 🌐 Webサイト用入力フォーム */}
+            {citationType === 'web' && (
+              <>
+                <div className="flex gap-2">
+                  <input type="text" placeholder="URLを貼って自動入力" className={`flex-1 border rounded px-3 py-2 text-sm outline-none ${theme.input}`} value={refData.url} onChange={(e) => setRefData({...refData, url: e.target.value})} />
+                  <button onClick={handleAutoFill} disabled={isAnalyzing} className="bg-blue-600 text-white text-[10px] font-bold px-4 py-2 rounded shadow-sm hover:bg-blue-700 transition-colors shrink-0">{isAnalyzing ? "解析中" : "⚡自動入力"}</button>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <input type="text" placeholder="ページタイトル" className={`border rounded px-3 py-2 text-xs outline-none ${theme.input}`} value={refData.title} onChange={(e) => setRefData({...refData, title: e.target.value})} />
+                  <input type="text" placeholder="サイト名 / 著者" className={`border rounded px-3 py-2 text-xs outline-none ${theme.input}`} value={refData.author} onChange={(e) => setRefData({...refData, author: e.target.value})} />
+                </div>
+              </>
+            )}
+
+            {/* 📖 論文用入力フォーム */}
+            {citationType === 'paper' && (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                   <input type="text" placeholder="論文・書籍タイトル" className={`col-span-2 border rounded px-3 py-2 text-xs outline-none ${theme.input}`} value={refData.title} onChange={(e) => setRefData({...refData, title: e.target.value})} />
+                   <input type="text" placeholder="著者名 (例: 山田 太郎)" className={`border rounded px-3 py-2 text-xs outline-none ${theme.input}`} value={refData.author} onChange={(e) => setRefData({...refData, author: e.target.value})} />
+                   <input type="text" placeholder="掲載誌名・出版社" className={`border rounded px-3 py-2 text-xs outline-none ${theme.input}`} value={refData.journal} onChange={(e) => setRefData({...refData, journal: e.target.value})} />
+                   <div className="grid grid-cols-3 col-span-2 gap-2">
+                      <input type="text" placeholder="発行年 (例: 2024)" className={`border rounded px-2 py-2 text-xs outline-none ${theme.input}`} value={refData.pubYear} onChange={(e) => setRefData({...refData, pubYear: e.target.value})} />
+                      <input type="text" placeholder="巻(号) (例: 12(3))" className={`border rounded px-2 py-2 text-xs outline-none ${theme.input}`} value={refData.vol} onChange={(e) => setRefData({...refData, vol: e.target.value})} />
+                      <input type="text" placeholder="ページ (例: 12-24)" className={`border rounded px-2 py-2 text-xs outline-none ${theme.input}`} value={refData.pages} onChange={(e) => setRefData({...refData, pages: e.target.value})} />
+                   </div>
+                </div>
+              </>
+            )}
+
             <button onClick={handleGenerateRef} className={`w-full text-white text-sm font-bold py-2.5 rounded transition-colors ${isDarkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-800 hover:bg-gray-900'}`}>書式を作成</button>
           </div>
+          
           {generatedRef && (
             <div className={`mt-3 p-3 border border-dashed rounded text-[11px] flex justify-between items-center ${isDarkMode ? 'bg-gray-700 border-gray-600 text-gray-200' : 'bg-gray-50 border-gray-300 text-gray-700'}`}>
               <code className="truncate mr-4">{generatedRef}</code>
