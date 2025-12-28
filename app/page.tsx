@@ -497,6 +497,24 @@ export default function Home() {
             📝 レポート課題を攻略する！お役立ちガイド
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* 🆕 新記事: PREP法 */}
+            <Link href="/blog/prep-method" className={`block p-5 rounded-xl border shadow-sm hover:shadow-md transition-all group ${theme.card}`}>
+              <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-sm">
+                【論理構成】説得力が3倍になる「PREP法」とは？
+              </h4>
+              <p className={`text-[10px] leading-relaxed ${theme.subText}`}>
+                「結論から書け」と言われたらこれ。論理的なレポートを書くための最強のフレームワークを解説。
+              </p>
+            </Link>
+            {/* 🆕 新記事: コピペ・剽窃 */}
+            <Link href="/blog/plagiarism-rules" className={`block p-5 rounded-xl border shadow-sm hover:shadow-md transition-all group ${theme.card}`}>
+              <h4 className="font-bold text-blue-600 group-hover:underline mb-2 text-sm">
+                【注意】「コピペ」の境界線はどこ？剽窃にならない引用術
+              </h4>
+              <p className={`text-[10px] leading-relaxed ${theme.subText}`}>
+                バレると単位剥奪！？やってはいけないNG行動と、正しく引用するための安全なルール。
+              </p>
+            </Link>
             
             {/* 記事: 語彙力 */}
             <Link href="/blog/vocabulary-list" className={`block p-5 rounded-xl border shadow-sm hover:shadow-md transition-all group ${theme.card}`}>
