@@ -39,7 +39,7 @@ export default function About() {
             <h1 className="text-3xl font-black text-gray-900 tracking-tight">Acky</h1>
             <p className="text-sm font-bold text-blue-600 mt-2 tracking-widest uppercase">Developer / Student</p>
             <p className="text-base text-gray-500 mt-4 max-w-md mx-auto leading-relaxed">
-              「不便を技術でハックする」がモットーの現役大学生エンジニア。<br/>
+              「不便を技術でハックする」がモットーの現役学生エンジニア。<br/>
               単位とバグと戦いながら、Webサービスを開発しています。
             </p>
           </div>
@@ -73,7 +73,7 @@ export default function About() {
               <strong>「あと何文字書けばいいんだ…？」</strong>
             </p>
             <p>
-              大学の図書館でレポート課題と格闘していた時、ふと思いました。<br/>
+              学内の図書館でレポート課題と格闘していた時、ふと思いました。<br/>
               Wordの文字数カウント機能はいちいちクリックしないと見れないし、スペースを含めるかどうかも分かりにくい。
               何より、ただ文字を数えるだけの作業は孤独で、モチベーションが続きませんでした。
             </p>
